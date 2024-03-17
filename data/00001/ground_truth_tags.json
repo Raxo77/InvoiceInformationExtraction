@@ -1,0 +1,250 @@
+[
+    {
+        "tag": "beneficiary.bank.address.city",
+        "value": "Shawnchester, MN 44421",
+        "top": 1886,
+        "left": 890,
+        "height": 42,
+        "width": 709
+    },
+    {
+        "tag": "beneficiary.bank.address.street",
+        "value": "174 Donna Trafficway Apt. 944",
+        "top": 1845,
+        "left": 890,
+        "height": 41,
+        "width": 709
+    },
+    {
+        "tag": "beneficiary.bank.name",
+        "value": "Ward, Esparza and Krause",
+        "top": 1794,
+        "left": 890,
+        "height": 51,
+        "width": 709
+    },
+    {
+        "tag": "beneficiary.bic",
+        "value": "LOYD GB 2L",
+        "top": 1928,
+        "left": 1392,
+        "height": 52,
+        "width": 207
+    },
+    {
+        "tag": "beneficiary.iban",
+        "value": "GB22 LOYD 8546 1463 3082 97",
+        "top": 2003,
+        "left": 890,
+        "height": 90,
+        "width": 709
+    },
+    {
+        "tag": "beneficiary.iban.account_code",
+        "value": "63308297",
+        "top": 1720,
+        "left": 1425,
+        "height": 51,
+        "width": 174
+    },
+    {
+        "tag": "beneficiary.name",
+        "value": "Justin Watson",
+        "top": 1640,
+        "left": 1367,
+        "height": 80,
+        "width": 232
+    },
+    {
+        "tag": "buyer.bill.address.city",
+        "value": "South Victoriachester, GA 93458",
+        "top": 613,
+        "left": 100,
+        "height": 46,
+        "width": 768
+    },
+    {
+        "tag": "buyer.bill.address.street",
+        "value": "1216 Suarez Tunnel Apt. 333",
+        "top": 571,
+        "left": 100,
+        "height": 47,
+        "width": 768
+    },
+    {
+        "tag": "buyer.bill.contact",
+        "value": "John Lambert",
+        "top": 519,
+        "left": 100,
+        "height": 57,
+        "width": 228
+    },
+    {
+        "tag": "buyer.bill.phone_number",
+        "value": "+962778250152",
+        "top": 659,
+        "left": 100,
+        "height": 82,
+        "width": 768
+    },
+    {
+        "tag": "buyer.company.name",
+        "value": "Johnson LLC",
+        "top": 442,
+        "left": 328,
+        "height": 134,
+        "width": 540
+    },
+    {
+        "tag": "invoice_date",
+        "value": "06/24/2021",
+        "top": 570,
+        "left": 1380,
+        "height": 41,
+        "width": 219
+    },
+    {
+        "tag": "invoice_due_date",
+        "value": "09/22/2021",
+        "top": 611,
+        "left": 1380,
+        "height": 130,
+        "width": 219
+    },
+    {
+        "tag": "invoice_number",
+        "value": "#898146",
+        "top": 442,
+        "left": 1420,
+        "height": 128,
+        "width": 179
+    },
+    {
+        "tag": "payment_terms",
+        "value": "Payment 90 days after invoice date",
+        "top": 1640,
+        "left": 100,
+        "height": 453,
+        "width": 718
+    },
+    {
+        "tag": "products.0.description",
+        "value": "Pink blue felt craft trinket box",
+        "top": 912,
+        "left": 217,
+        "height": 79,
+        "width": 676
+    },
+    {
+        "tag": "products.0.id",
+        "value": "1421",
+        "top": 912,
+        "left": 100,
+        "height": 79,
+        "width": 116
+    },
+    {
+        "tag": "products.0.quantity",
+        "value": "2",
+        "top": 912,
+        "left": 894,
+        "height": 79,
+        "width": 226
+    },
+    {
+        "tag": "products.0.total",
+        "value": "4.92",
+        "top": 912,
+        "left": 1354,
+        "height": 79,
+        "width": 245
+    },
+    {
+        "tag": "products.0.unit_price",
+        "value": "2.46",
+        "top": 912,
+        "left": 1121,
+        "height": 79,
+        "width": 232
+    },
+    {
+        "tag": "seller.address.city",
+        "value": "East Melissa, KY 34561",
+        "top": 303,
+        "left": 424,
+        "height": 56,
+        "width": 444
+    },
+    {
+        "tag": "seller.address.street",
+        "value": "5289 Morgan Walks",
+        "top": 313,
+        "left": 100,
+        "height": 46,
+        "width": 324
+    },
+    {
+        "tag": "seller.company.name",
+        "value": "Yates, Taylor and Wood",
+        "top": 100,
+        "left": 324,
+        "height": 218,
+        "width": 544
+    },
+    {
+        "tag": "seller.contact",
+        "value": "Lisa Montoya",
+        "top": 261,
+        "left": 100,
+        "height": 57,
+        "width": 224
+    },
+    {
+        "tag": "seller.phone_number",
+        "value": "325-285-0965",
+        "top": 354,
+        "left": 100,
+        "height": 87,
+        "width": 768
+    },
+    {
+        "tag": "summary.balance",
+        "value": "$ 10.84",
+        "top": 1387,
+        "left": 1354,
+        "height": 79,
+        "width": 245
+    },
+    {
+        "tag": "summary.shipping.price",
+        "value": "5.65",
+        "top": 1308,
+        "left": 1354,
+        "height": 78,
+        "width": 245
+    },
+    {
+        "tag": "summary.subtotal",
+        "value": "4.92",
+        "top": 1150,
+        "left": 1354,
+        "height": 78,
+        "width": 245
+    },
+    {
+        "tag": "summary.tax_rate",
+        "value": "5.4%",
+        "top": 1244,
+        "left": 1243,
+        "height": 63,
+        "width": 110
+    },
+    {
+        "tag": "summary.tax_total",
+        "value": "0.27",
+        "top": 1229,
+        "left": 1354,
+        "height": 78,
+        "width": 245
+    }
+]

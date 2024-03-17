@@ -1,4 +1,4 @@
-from helperFunctions import getConfig, separate
+from utils.helperFunctions import getConfig, separate
 import os
 
 """

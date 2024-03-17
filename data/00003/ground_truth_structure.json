@@ -1,0 +1,160 @@
+{
+    "buyer": {
+        "bill": {
+            "address": {
+                "city": {
+                    "city_name": "West Kimberlybury",
+                    "postcode": "35779",
+                    "state_abbr": "OH"
+                },
+                "street": {
+                    "building_number": "958",
+                    "secondary_address": "Suite 779",
+                    "street_name": "Browning Island"
+                }
+            },
+            "contact": {
+                "first_name": "Michael",
+                "last_name": "Mcdonald"
+            }
+        },
+        "shipment": {
+            "address": {
+                "city": {
+                    "city_name": "South Marybury",
+                    "postcode": "28465",
+                    "state_abbr": "NC"
+                },
+                "street": {
+                    "building_number": "267",
+                    "street_name": "Hoover View"
+                }
+            },
+            "contact": {
+                "first_name": "Kyle",
+                "last_name": "Rose"
+            }
+        }
+    },
+    "invoice_date": {
+        "day": 6,
+        "month": 3,
+        "year": 2004
+    },
+    "invoice_number": 819567,
+    "payment_terms": "Letter of credit",
+    "products": {
+        "0": {
+            "description": "Zinc Metal Heart Decoration",
+            "quantity": 5,
+            "total": 6.25,
+            "unit_price": 1.25
+        },
+        "1": {
+            "description": "72 Sweetheart Fairy Cake Cases",
+            "quantity": 5,
+            "total": 6.4,
+            "unit_price": 1.28
+        },
+        "10": {
+            "description": "Set Of 3 Cake Tins Pantry Design ",
+            "quantity": 1,
+            "total": 4.95,
+            "unit_price": 4.95
+        },
+        "11": {
+            "description": "Frying Pan Union Flag",
+            "quantity": 8,
+            "total": 34.0,
+            "unit_price": 4.25
+        },
+        "12": {
+            "description": "Cardholder Gingham Star",
+            "quantity": 3,
+            "total": 8.67,
+            "unit_price": 2.89
+        },
+        "2": {
+            "description": "Recipe Box Blue Sketchbook Design",
+            "quantity": 8,
+            "total": 23.6,
+            "unit_price": 2.95
+        },
+        "3": {
+            "description": "Biscuit Tin 50'S Christmas",
+            "quantity": 1,
+            "total": 2.89,
+            "unit_price": 2.89
+        },
+        "4": {
+            "description": "Tuscan Villa Feeding Station",
+            "quantity": 1,
+            "total": 8.25,
+            "unit_price": 8.25
+        },
+        "5": {
+            "description": "Brocante Shelf With Hooks",
+            "quantity": 9,
+            "total": 96.75,
+            "unit_price": 10.75
+        },
+        "6": {
+            "description": "Paper Chain Kit Empire",
+            "quantity": 5,
+            "total": 14.75,
+            "unit_price": 2.95
+        },
+        "7": {
+            "description": "Jumbo Bag Pink Vintage Paisley",
+            "quantity": 9,
+            "total": 18.72,
+            "unit_price": 2.08
+        },
+        "8": {
+            "description": "Hand Warmer Red Love Heart",
+            "quantity": 5,
+            "total": 10.5,
+            "unit_price": 2.1
+        },
+        "9": {
+            "description": "French Blue Metal Door Sign 2",
+            "quantity": 3,
+            "total": 3.75,
+            "unit_price": 1.25
+        }
+    },
+    "seller": {
+        "address": {
+            "city": {
+                "city_name": "Leemouth",
+                "postcode": "32032",
+                "state_abbr": "KY"
+            },
+            "street": {
+                "building_number": "9035",
+                "secondary_address": "Suite 283",
+                "street_name": "Matthew Loop"
+            }
+        },
+        "company": {
+            "name": "Horton Ltd"
+        },
+        "fax_number": {
+            "country_code": 31,
+            "national_number": 268902580
+        },
+        "phone_number": {
+            "country_code": 1,
+            "extension": 8848,
+            "national_number": 5086341467
+        }
+    },
+    "summary": {
+        "balance": 286.23,
+        "shipping": {
+            "price": 5.32
+        },
+        "subtotal": 239.48,
+        "tax_total": 41.43
+    }
+}

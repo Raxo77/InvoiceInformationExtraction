@@ -1,0 +1,418 @@
+[
+    {
+        "tag": "buyer.bill.address.city",
+        "value": "New Ryanborough, DE 02629",
+        "top": 417,
+        "left": 621,
+        "height": 29,
+        "width": 374
+    },
+    {
+        "tag": "buyer.bill.address.street",
+        "value": "284 Dean Island",
+        "top": 387,
+        "left": 621,
+        "height": 30,
+        "width": 374
+    },
+    {
+        "tag": "buyer.bill.contact",
+        "value": "Christopher Owens",
+        "top": 325,
+        "left": 621,
+        "height": 33,
+        "width": 374
+    },
+    {
+        "tag": "buyer.bill.customer_id",
+        "value": "2897393",
+        "top": 475,
+        "left": 621,
+        "height": 32,
+        "width": 374
+    },
+    {
+        "tag": "buyer.bill.phone_number",
+        "value": "1-951-635-1700",
+        "top": 446,
+        "left": 621,
+        "height": 29,
+        "width": 374
+    },
+    {
+        "tag": "buyer.company.name",
+        "value": "Frederick-Rodriguez",
+        "top": 358,
+        "left": 621,
+        "height": 29,
+        "width": 374
+    },
+    {
+        "tag": "invoice_date",
+        "value": "29 December, 2014",
+        "top": 200,
+        "left": 1351,
+        "height": 71,
+        "width": 231
+    },
+    {
+        "tag": "invoice_date",
+        "value": "29 December, 2014",
+        "top": 1490,
+        "left": 442,
+        "height": 40,
+        "width": 417
+    },
+    {
+        "tag": "invoice_number",
+        "value": "#63415",
+        "top": 269,
+        "left": 1469,
+        "height": 24,
+        "width": 113
+    },
+    {
+        "tag": "invoice_number",
+        "value": "#63415",
+        "top": 1448,
+        "left": 442,
+        "height": 41,
+        "width": 417
+    },
+    {
+        "tag": "products.0.description",
+        "value": "Grow a flytrap or sunflower in tin",
+        "top": 548,
+        "left": 329,
+        "height": 38,
+        "width": 693
+    },
+    {
+        "tag": "products.0.total",
+        "value": "15.00",
+        "top": 548,
+        "left": 1296,
+        "height": 38,
+        "width": 284
+    },
+    {
+        "tag": "products.0.unit_price",
+        "value": "2.50",
+        "top": 548,
+        "left": 1023,
+        "height": 38,
+        "width": 272
+    },
+    {
+        "tag": "products.1.description",
+        "value": "Set/20 strawberry paper napkins ",
+        "top": 587,
+        "left": 329,
+        "height": 39,
+        "width": 693
+    },
+    {
+        "tag": "products.1.total",
+        "value": "0.85",
+        "top": 587,
+        "left": 1296,
+        "height": 39,
+        "width": 284
+    },
+    {
+        "tag": "products.1.unit_price",
+        "value": "0.85",
+        "top": 587,
+        "left": 1023,
+        "height": 39,
+        "width": 272
+    },
+    {
+        "tag": "products.2.description",
+        "value": "Mirror mosaic votive holder",
+        "top": 627,
+        "left": 329,
+        "height": 39,
+        "width": 693
+    },
+    {
+        "tag": "products.2.total",
+        "value": "7.38",
+        "top": 627,
+        "left": 1296,
+        "height": 39,
+        "width": 284
+    },
+    {
+        "tag": "products.2.unit_price",
+        "value": "2.46",
+        "top": 627,
+        "left": 1023,
+        "height": 39,
+        "width": 272
+    },
+    {
+        "tag": "products.3.description",
+        "value": "White hanging heart t-light holder",
+        "top": 667,
+        "left": 329,
+        "height": 38,
+        "width": 693
+    },
+    {
+        "tag": "products.3.total",
+        "value": "2.95",
+        "top": 667,
+        "left": 1296,
+        "height": 38,
+        "width": 284
+    },
+    {
+        "tag": "products.3.unit_price",
+        "value": "2.95",
+        "top": 667,
+        "left": 1023,
+        "height": 38,
+        "width": 272
+    },
+    {
+        "tag": "products.4.description",
+        "value": "Decoration , wobbly rabbit , metal ",
+        "top": 706,
+        "left": 329,
+        "height": 39,
+        "width": 693
+    },
+    {
+        "tag": "products.4.total",
+        "value": "8.25",
+        "top": 706,
+        "left": 1296,
+        "height": 39,
+        "width": 284
+    },
+    {
+        "tag": "products.4.unit_price",
+        "value": "1.65",
+        "top": 706,
+        "left": 1023,
+        "height": 39,
+        "width": 272
+    },
+    {
+        "tag": "products.5.description",
+        "value": "Jumbo bag pink polkadot",
+        "top": 746,
+        "left": 329,
+        "height": 38,
+        "width": 693
+    },
+    {
+        "tag": "products.5.total",
+        "value": "18.72",
+        "top": 746,
+        "left": 1296,
+        "height": 38,
+        "width": 284
+    },
+    {
+        "tag": "products.5.unit_price",
+        "value": "2.08",
+        "top": 746,
+        "left": 1023,
+        "height": 38,
+        "width": 272
+    },
+    {
+        "tag": "products.6.description",
+        "value": "Jam making set printed",
+        "top": 785,
+        "left": 329,
+        "height": 39,
+        "width": 693
+    },
+    {
+        "tag": "products.6.total",
+        "value": "19.74",
+        "top": 785,
+        "left": 1296,
+        "height": 39,
+        "width": 284
+    },
+    {
+        "tag": "products.6.unit_price",
+        "value": "3.29",
+        "top": 785,
+        "left": 1023,
+        "height": 39,
+        "width": 272
+    },
+    {
+        "tag": "products.7.description",
+        "value": "Lunch bag red retrospot",
+        "top": 825,
+        "left": 329,
+        "height": 39,
+        "width": 693
+    },
+    {
+        "tag": "products.7.total",
+        "value": "3.30",
+        "top": 825,
+        "left": 1296,
+        "height": 39,
+        "width": 284
+    },
+    {
+        "tag": "products.7.unit_price",
+        "value": "1.65",
+        "top": 825,
+        "left": 1023,
+        "height": 39,
+        "width": 272
+    },
+    {
+        "tag": "products.8.description",
+        "value": "Doormat keep calm and come in",
+        "top": 865,
+        "left": 329,
+        "height": 38,
+        "width": 693
+    },
+    {
+        "tag": "products.8.total",
+        "value": "47.70",
+        "top": 865,
+        "left": 1296,
+        "height": 38,
+        "width": 284
+    },
+    {
+        "tag": "products.8.unit_price",
+        "value": "7.95",
+        "top": 865,
+        "left": 1023,
+        "height": 38,
+        "width": 272
+    },
+    {
+        "tag": "products.9.description",
+        "value": "Alarm clock bakelike pink",
+        "top": 904,
+        "left": 329,
+        "height": 39,
+        "width": 693
+    },
+    {
+        "tag": "products.9.total",
+        "value": "11.25",
+        "top": 904,
+        "left": 1296,
+        "height": 39,
+        "width": 284
+    },
+    {
+        "tag": "products.9.unit_price",
+        "value": "3.75",
+        "top": 904,
+        "left": 1023,
+        "height": 39,
+        "width": 272
+    },
+    {
+        "tag": "seller.address.city",
+        "value": "Munozbury, MA 46630",
+        "top": 387,
+        "left": 117,
+        "height": 30,
+        "width": 351
+    },
+    {
+        "tag": "seller.address.street",
+        "value": "9808 Johnson Ferry Apt. 019",
+        "top": 358,
+        "left": 117,
+        "height": 29,
+        "width": 351
+    },
+    {
+        "tag": "seller.company.name",
+        "value": "Hawkins and Sons",
+        "top": 325,
+        "left": 117,
+        "height": 33,
+        "width": 351
+    },
+    {
+        "tag": "seller.company.name",
+        "value": "Hawkins and Sons",
+        "top": 1708,
+        "left": 891,
+        "height": 24,
+        "width": 691
+    },
+    {
+        "tag": "seller.company.slogan",
+        "value": "Progressive client-server info-mediaries",
+        "top": 200,
+        "left": 392,
+        "height": 122,
+        "width": 699
+    },
+    {
+        "tag": "seller.email",
+        "value": "rodriguezalex@fisher-roach.net",
+        "top": 475,
+        "left": 117,
+        "height": 32,
+        "width": 351
+    },
+    {
+        "tag": "seller.fax_number",
+        "value": "+3209-2295833",
+        "top": 446,
+        "left": 117,
+        "height": 29,
+        "width": 351
+    },
+    {
+        "tag": "seller.phone_number",
+        "value": "(+358) 663125511",
+        "top": 417,
+        "left": 117,
+        "height": 29,
+        "width": 351
+    },
+    {
+        "tag": "summary.balance",
+        "value": "$ 149.19",
+        "top": 1573,
+        "left": 442,
+        "height": 41,
+        "width": 417
+    },
+    {
+        "tag": "summary.balance",
+        "value": "$ 149.19",
+        "top": 1531,
+        "left": 442,
+        "height": 41,
+        "width": 417
+    },
+    {
+        "tag": "summary.balance",
+        "value": "$ 149.19",
+        "top": 1367,
+        "left": 1300,
+        "height": 38,
+        "width": 280
+    },
+    {
+        "tag": "summary.balance",
+        "value": "$ 149.19",
+        "top": 1367,
+        "left": 117,
+        "height": 38,
+        "width": 267
+    }
+]

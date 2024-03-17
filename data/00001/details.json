@@ -1,0 +1,23 @@
+{
+  "invoice": {
+    "template": "templates/Invoice_87.htm",
+    "logo": "logos/enklereliv.png",
+    "font": "fonts/Nunito/Nunito-ExtraBoldItalic.ttf",
+    "dpi": 200,
+    "color_map": {
+      "#DB5353": "#db9853",
+      "#903638": "#719036",
+      "#CAE0E7": "#e7deca",
+      "#EBE7D5": "#ebd5d5",
+      "#BFBFBF": "#bfbfbf",
+      "#F5F3EA": "#f0f5ea"
+    },
+    "font_scale": 0.9986753509823603,
+    "margin": 13
+  },
+  "warping": {
+    "environment": "environments/9C4A1398-b6ccb38adc.exr",
+    "mesh": "meshes/objs/C/1/1_290_4.obj",
+    "resolution": 1600
+  }
+}

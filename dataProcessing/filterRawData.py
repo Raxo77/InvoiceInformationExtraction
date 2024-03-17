@@ -1,8 +1,6 @@
-import sys
 import os
-from helperFunctions import getConfig
+from utils.helperFunctions import getConfig
 
-from helperFunctions import createJSON, loadJSON, separate
 from pdf2image import convert_from_path
 
 
