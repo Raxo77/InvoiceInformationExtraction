@@ -13,10 +13,12 @@ def loadJSON(pathToData: str):
     return data
 
 
-def createJSON(pathNewJSON, content):
+def createJSON(pathNewJSON: str, content: dict):
     with open(pathNewJSON, "w") as outfile:
         json.dump(content, outfile)
 
 
 def getConfig(entity: str, pathToConfig: str):
     return loadJSON(pathToConfig)[entity]
+
+

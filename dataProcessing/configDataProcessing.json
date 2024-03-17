@@ -1,3 +1,14 @@
 {
-  "pathToDataFolder": null
+  "pathToDataFolder": "C:\\Users\\fabia\\NER_for_IIE\\data",
+  "filesToKeep": [
+    "flat_document.pdf",
+    "flat_document.png",
+    "details.json",
+    "ground_truth_structure.json",
+    "ground_truth_tags.json",
+    "ground_truth_words.json",
+    "flat_information_delta.png",
+    "flat_template.png",
+    "flat_text_mask.png"
+  ]
 }

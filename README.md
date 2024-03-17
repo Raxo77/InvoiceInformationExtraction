@@ -1,1 +1,1 @@
-# InvoiceInformationExtraction
+# Invoice Information Extraction
