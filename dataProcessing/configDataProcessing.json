@@ -1,5 +1,6 @@
 {
   "pathToDataFolder": "C:\\Users\\fabia\\NER_for_IIE\\data",
+  "groundTruthFileName" : "ground_truth_words.json",
   "filesToKeep": [
     "flat_document.pdf",
     "flat_document.png",

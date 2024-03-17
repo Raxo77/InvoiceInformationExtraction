@@ -24,7 +24,7 @@ PATH_TO_DATA_FOLDER = getConfig("pathToDataFolder", CONFIG)
 FILES_TO_KEEP = getConfig("filesToKeep", CONFIG)
 
 
-def listDirectory(path=PATH_TO_DATA_FOLDER, folderOnly=True):
+def listDirectory(path=PATH_TO_DATA_FOLDER, folderOnly=True) -> list:
     dirList = list(os.scandir(path))
 
     if folderOnly:
@@ -45,4 +45,5 @@ def filterFiles(dirList, whitelist=FILES_TO_KEEP, feedback=False):
             separate()
 
 
+# run for all:
 # filterFiles(listDirectory(),feedback=True)

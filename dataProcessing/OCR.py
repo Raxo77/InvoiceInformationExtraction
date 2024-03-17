@@ -1,10 +1,12 @@
-from utils.helperFunctions import getConfig, separate, loadJSON
-from filterRawDataset import listDirectory, CONFIG
+from utils.helperFunctions import getConfig, loadJSON
+from filterRawDataset import listDirectory, CONFIG, PATH_TO_DATA_FOLDER
 from pdf2image import convert_from_path
 from PIL import Image, ImageStat
 import pytesseract
-import Levenshtein as lev
+import Levenshtein
 from bs4 import BeautifulSoup
+
+GROUND_TRUTH_FILE_NAME = getConfig("groundTruthFileName", CONFIG)
 
 
 def convertPDFtoImage(pathToPDF: str, outputFolder=""):
@@ -12,7 +14,7 @@ def convertPDFtoImage(pathToPDF: str, outputFolder=""):
     imageList = []
 
     for count, image in enumerate(images):
-        if not False:  # imageIsBlank(image):
+        if not imageIsBlank(image):
 
             if outputFolder:
                 imagePath = f"{outputFolder}\\invoiceImage_{count}.png"
@@ -29,7 +31,7 @@ def imageIsBlank(image, threshold=254):
     return ImageStat.Stat(image.convert("L")).mean[0] >= threshold
 
 
-def OCRengine(imageList: list, saveResultsPath=""):
+def OCRengine(imageList: list, saveResultsPath="", groundTruthPath=""):
     hOCR_list = []
 
     for imageInfo in imageList:
@@ -53,7 +55,11 @@ def OCRengine(imageList: list, saveResultsPath=""):
         with open(saveResultsPath, "w", encoding="utf-8") as f:
             f.write(hOCR_xml)
 
-    return hOCR_xml
+    if groundTruthPath:
+        return hOCR_xml, compareOCRwithGroundTruth(hOCR_xml, groundTruthPath)
+
+    else:
+        return hOCR_xml, None
 
 
 def compareOCRwithGroundTruth(hOCR_output, groundTruthPath):
@@ -66,18 +72,29 @@ def compareOCRwithGroundTruth(hOCR_output, groundTruthPath):
 
     missingCount = [0., []]
     temp = groundTruthText.split()
+    temp = [i.replace(",", "") for i in temp]
     for word in words.split():
-        if word not in temp:
-            if word[:-1] in temp:
-                missingCount[0] += .5
-                missingCount[1].append(word[:-1])
-            else:
-                missingCount[0] += 1
-                missingCount[1].append(word)
+        if word.replace(",", "") not in temp:
+            missingCount[0] += 1
+            missingCount[1].append(word)
 
-    distance = lev.distance(words, groundTruthText)
+    distance = Levenshtein.distance(words, groundTruthText)
     similarity = 1 - distance / max(len(words), len(groundTruthText))
 
     return similarity, missingCount
 
 
+def runForAll():
+    for directory in listDirectory(PATH_TO_DATA_FOLDER):
+        pdfFile = []
+        for file in listDirectory(directory.path, folderOnly=False):
+            if file.name.endswith("pdf"):
+                pdfFile.append(file)
+        if len(pdfFile) == 1:
+            pdfFile = pdfFile[0]
+            imageList = convertPDFtoImage(pdfFile.path)
+            OCRengine(imageList,
+                      f"{directory.path}\\hOCR_output.xml",
+                      f"{directory.path}\\{GROUND_TRUTH_FILE_NAME}")
+        else:
+            print(directory.name)
