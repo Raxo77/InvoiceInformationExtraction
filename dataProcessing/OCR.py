@@ -81,7 +81,3 @@ def compareOCRwithGroundTruth(hOCR_output, groundTruthPath):
     return similarity, missingCount
 
 
-images = convertPDFtoImage(r"C:\Users\fabia\NER_for_IIE\data\00001\flat_document.pdf")
-a = OCRengine(images)
-b = compareOCRwithGroundTruth(a, r"C:\Users\fabia\NER_for_IIE\data\00001\ground_truth_words.json")
-print(b)
