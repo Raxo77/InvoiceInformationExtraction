@@ -1,1 +1,0 @@
-CONFIG_PATH = r"C:\Users\fabia\NER_for_IIE\utils\configGlobal.json"
