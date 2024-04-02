@@ -22,3 +22,4 @@ def getConfig(entity: str, pathToConfig: str):
     return loadJSON(pathToConfig)[entity]
 
 
+CONFIG_PATH = r"C:\Users\fabia\NER_for_IIE\utils\configGlobal.json"
