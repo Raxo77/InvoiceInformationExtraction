@@ -1,12 +1,16 @@
 from utils.helperFunctions import getConfig, loadJSON
-from filterRawDataset import listDirectory, CONFIG, PATH_TO_DATA_FOLDER
+from dataProcessing.filterRawDataset import listDirectory
 from pdf2image import convert_from_path
 from PIL import Image, ImageStat
 import pytesseract
 import Levenshtein
 from bs4 import BeautifulSoup
+from utils.CONFIG_PATH import CONFIG_PATH
 
+CONFIG = CONFIG_PATH
 GROUND_TRUTH_FILE_NAME = getConfig("groundTruthFileName", CONFIG)
+PATH_TO_DATA_FOLDER = getConfig("pathToDataFolder", CONFIG)
+
 
 
 def convertPDFtoImage(pathToPDF: str, outputFolder=""):
@@ -27,7 +31,7 @@ def convertPDFtoImage(pathToPDF: str, outputFolder=""):
     return imageList
 
 
-def imageIsBlank(image, threshold=254):
+def imageIsBlank(image, threshold=254.5):
     return ImageStat.Stat(image.convert("L")).mean[0] >= threshold
 
 
@@ -41,6 +45,7 @@ def OCRengine(imageList: list, saveResultsPath="", groundTruthPath=""):
             image = imageInfo
 
         hOCR_data = pytesseract.image_to_pdf_or_hocr(image, extension="hocr")
+        print(hOCR_data)
         hOCR_list.append(hOCR_data.decode("utf-8"))
 
     hOCR_xml = BeautifulSoup(hOCR_list[0], features="lxml")
@@ -98,3 +103,7 @@ def runForAll():
                       f"{directory.path}\\{GROUND_TRUTH_FILE_NAME}")
         else:
             print(directory.name)
+
+
+# imgList = convertPDFtoImage(r"C:\Users\fabia\Downloads\test.pdf")
+# OCRengine(imgList)

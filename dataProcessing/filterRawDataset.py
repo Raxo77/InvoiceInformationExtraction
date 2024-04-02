@@ -1,5 +1,6 @@
-from utils.helperFunctions import getConfig, separate
+from utils.helperFunctions import getConfig, separate, loadJSON, createJSON
 import os
+from utils.CONFIG_PATH import CONFIG_PATH
 
 """
   Of the files provided per invoice, we need:
@@ -19,7 +20,7 @@ In a second step, pdf will be fed to an OCR engine. The OCR output will then be
 compared to the ground truth labels to assess OCR accuracy and perform a ceiling analysis.
 """
 
-CONFIG = "configDataProcessing.json"
+CONFIG = CONFIG_PATH
 PATH_TO_DATA_FOLDER = getConfig("pathToDataFolder", CONFIG)
 FILES_TO_KEEP = getConfig("filesToKeep", CONFIG)
 
@@ -45,5 +46,33 @@ def filterFiles(dirList, whitelist=FILES_TO_KEEP, feedback=False):
             separate()
 
 
-# run for all:
+def getGoldLabels(pathToJSON: str, targets: dict, dirPath=""):
+    # assuming JSON is structured like ground_truth_tags.json
+    data = loadJSON(pathToJSON)
+
+    data = {
+        entry["tag"]: {k: v for k, v in entry.items() if k != "tag"}
+        for entry in data
+    }
+    goldLabels = {i: [] for i in targets.keys()}
+    for k, v in targets.items():
+        for i in v:
+            try:
+                goldLabels[k].append(data[i])
+            except KeyError:
+                goldLabels[k].append(None)
+    temp = goldLabels
+    goldLabels = {}
+    for k,v in temp.items():
+        if len(v) > 0:
+            goldLabels[k] = v[0]
+        else: goldLabels[k] = None
+    #goldLabels = {k: v[0] for k, v in goldLabels.items() if len(v) > 0 else k: None}
+
+    if dirPath:
+        createJSON(f"{dirPath}\\goldLabels.json", goldLabels)
+
+    return goldLabels
+
+# RUN FOR ALL:
 # filterFiles(listDirectory(),feedback=True)
