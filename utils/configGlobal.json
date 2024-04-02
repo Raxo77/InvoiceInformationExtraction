@@ -1,10 +1,65 @@
 {
-  "useSubmodel1": true,
-  "useSubmodel2": true,
-  "useSubmodel3": true,
-  "useSubmodel4": true,
-  "useSubmodel5": true,
-  "useSubmodel6": true,
-  "useSubmodel7": true,
-  "useSubmodel8": true
+  "pathToDataFolder": "C:\\Users\\fabia\\NER_for_IIE\\data",
+  "groundTruthFileName": "ground_truth_words.json",
+  "filesToKeep": [
+    "flat_document.pdf",
+    "flat_document.png",
+    "details.json",
+    "ground_truth_structure.json",
+    "ground_truth_tags.json",
+    "ground_truth_words.json",
+    "flat_information_delta.png",
+    "flat_template.png",
+    "flat_text_mask.png",
+    "hOCR_output.xml",
+    "wordposFeatures.json",
+    "zonesegFeatures.json",
+    "BERT_features.csv"
+  ],
+  "gridSize": [
+    11,
+    16
+  ],
+  "BERT_based": {
+    "titleThreshold": [
+      0.18
+    ],
+    "logicNumNGrams": 4,
+    "vicinityThreshold": 4
+  },
+  "targetLabels": {
+    "invoiceDate": [
+      "invoice_date"
+    ],
+    "invoiceNumber": [
+      "invoice_number"
+    ],
+    "invoiceGrossAmount": [
+      "summary.balance"
+    ],
+    "invoiceTaxAmount": [
+      "summary.tax_total"
+    ],
+    "orderNumber": [],
+    "issuerName": [
+      "seller.company.name"
+    ],
+    "issuerIBAN": [
+      "beneficiary.iban"
+    ],
+    "issuerAddress": [
+      "seller.address.city",
+      "seller.address.street"
+    ]
+  },
+  "ensembleModels": {
+    "useSubmodel1": true,
+    "useSubmodel2": true,
+    "useSubmodel3": true,
+    "useSubmodel4": true,
+    "useSubmodel5": true,
+    "useSubmodel6": true,
+    "useSubmodel7": true,
+    "useSubmodel8": true
+  }
 }
