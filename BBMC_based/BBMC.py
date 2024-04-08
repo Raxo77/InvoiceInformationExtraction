@@ -2,9 +2,9 @@ from transformers import BertTokenizer, BertModel
 import torch
 from TorchCRF import CRF
 import pandas as pd
-from utils.CONFIG_PATH import CONFIG_PATH
-from utils.helperFunctions import loadJSON, getConfig
+from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH
 from dataProcessing.customDataset import CustomDataset
+
 
 TOKENIZER = BertTokenizer.from_pretrained('bert-base-cased')
 MODEL = BertModel.from_pretrained('bert-base-cased')

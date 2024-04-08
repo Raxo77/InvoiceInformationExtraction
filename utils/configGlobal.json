@@ -1,21 +1,21 @@
 {
-  "pathToDataFolder": "C:\\Users\\fabia\\NER_for_IIE\\data",
+  "pathToDataFolder": "C:\\Users\\fabia\\InvoiceInformationExtraction\\data",
   "groundTruthFileName": "ground_truth_words.json",
-  "filesToKeep": [
-    "flat_document.pdf",
-    "flat_document.png",
-    "details.json",
-    "ground_truth_structure.json",
-    "ground_truth_tags.json",
-    "ground_truth_words.json",
+  "filesToDelete": [
     "flat_information_delta.png",
-    "flat_template.png",
-    "flat_text_mask.png",
-    "hOCR_output.xml",
-    "wordposFeatures.json",
-    "zonesegFeatures.json",
-    "BERT_features.csv"
+    "warped_albedo.png",
+    "warped_angle.npz",
+    "warped_BM.npz",
+    "warped_curvature.npz",
+    "warped_depth.npz",
+    "warped_document.png",
+    "warped_normal.npz",
+    "warped_recon.png",
+    "warped_text_mask.npz",
+    "warped_UV.npz",
+    "warped_WC.npz"
   ],
+  "imageIsBlankThreshold" : 254.5,
   "gridSize": [
     11,
     16
@@ -48,9 +48,9 @@
       "beneficiary.iban"
     ],
     "issuerAddress": [
-      "seller.address.city",
       "seller.address.street"
-    ]
+    ],
+    "issuerCity": ["seller.address.city"]
   },
   "ensembleModels": {
     "useSubmodel1": true,

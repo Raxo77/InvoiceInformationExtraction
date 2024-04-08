@@ -1,37 +1,41 @@
-from utils.helperFunctions import getConfig, loadJSON
+from utils.helperFunctions import getConfig, loadJSON, CONFIG_PATH
 from dataProcessing.filterRawDataset import listDirectory
 from pdf2image import convert_from_path
 from PIL import Image, ImageStat
 import pytesseract
 import Levenshtein
 from bs4 import BeautifulSoup
-from utils.CONFIG_PATH import CONFIG_PATH
+import os
 
 CONFIG = CONFIG_PATH
 GROUND_TRUTH_FILE_NAME = getConfig("groundTruthFileName", CONFIG)
 PATH_TO_DATA_FOLDER = getConfig("pathToDataFolder", CONFIG)
+IMAGE_IS_BLANK_THRESHOLD = getConfig("imageIsBlankThreshold", CONFIG)
 
 
-
-def convertPDFtoImage(pathToPDF: str, outputFolder=""):
+def convertPDFtoImage(pathToPDF: str, imageIsBlankThreshold: int, outputFolder: str = "") -> list:
     images = convert_from_path(pathToPDF)
     imageList = []
 
     for count, image in enumerate(images):
-        if not imageIsBlank(image):
+        if not imageIsBlank(image, imageIsBlankThreshold):
 
-            if outputFolder:
+            if outputFolder == "<same>":
+                imagePath = f"{os.path.split(pathToPDF)[0]}\\invoiceImage_{count}.png"
+
+
+            elif outputFolder:
                 imagePath = f"{outputFolder}\\invoiceImage_{count}.png"
                 image.save(imagePath)
                 imageList.append(imagePath)
 
-            else:
-                imageList.append(image)
+
+            imageList.append(image)
 
     return imageList
 
 
-def imageIsBlank(image, threshold=254.5):
+def imageIsBlank(image, threshold: int):
     return ImageStat.Stat(image.convert("L")).mean[0] >= threshold
 
 
@@ -89,7 +93,7 @@ def compareOCRwithGroundTruth(hOCR_output, groundTruthPath):
     return similarity, missingCount
 
 
-def runForAll():
+def runForAll(imageIsBlankThreshold=IMAGE_IS_BLANK_THRESHOLD):
     for directory in listDirectory(PATH_TO_DATA_FOLDER):
         pdfFile = []
         for file in listDirectory(directory.path, folderOnly=False):
@@ -97,13 +101,12 @@ def runForAll():
                 pdfFile.append(file)
         if len(pdfFile) == 1:
             pdfFile = pdfFile[0]
-            imageList = convertPDFtoImage(pdfFile.path)
+            imageList = convertPDFtoImage(pdfFile.path, imageIsBlankThreshold)
             OCRengine(imageList,
                       f"{directory.path}\\hOCR_output.xml",
                       f"{directory.path}\\{GROUND_TRUTH_FILE_NAME}")
         else:
             print(directory.name)
-
 
 # imgList = convertPDFtoImage(r"C:\Users\fabia\Downloads\test.pdf")
 # OCRengine(imgList)

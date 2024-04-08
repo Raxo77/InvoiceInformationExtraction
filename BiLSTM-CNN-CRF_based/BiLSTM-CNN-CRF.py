@@ -3,8 +3,7 @@ import torchtext
 from TorchCRF import CRF
 import pandas as pd
 from collections import OrderedDict
-from utils.CONFIG_PATH import CONFIG_PATH
-from utils.helperFunctions import getConfig
+from utils.helperFunctions import getConfig, CONFIG_PATH
 from dataProcessing.customDataset import CustomDataset
 
 """

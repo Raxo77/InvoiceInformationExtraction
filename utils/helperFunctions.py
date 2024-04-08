@@ -1,9 +1,8 @@
-import os
 import json
 
 
-def separate(x="-"):
-    print(x * 50)
+def separate(x="-", num=50, sep=" ", end="\n"):
+    print(x * num, sep=sep, end=end)
 
 
 def loadJSON(pathToData: str):
@@ -22,4 +21,7 @@ def getConfig(entity: str, pathToConfig: str):
     return loadJSON(pathToConfig)[entity]
 
 
-CONFIG_PATH = r"C:\Users\fabia\NER_for_IIE\utils\configGlobal.json"
+# Path to the global config file for all extractionScripts, models and the ensemble
+# - will be imported by all subsequent modules
+#CONFIG_PATH = r"C:\Users\fabia\NER_for_IIE\utils\configGlobal.json"
+CONFIG_PATH = r"C:\Users\fabia\InvoiceInformationExtraction\utils\configGlobal.json"

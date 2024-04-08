@@ -1,6 +1,5 @@
 from PIL import Image
-from utils.CONFIG_PATH import CONFIG_PATH
-from utils.helperFunctions import getConfig
+from utils.helperFunctions import getConfig, CONFIG_PATH
 import pandas as pd
 import numpy as np
 import re

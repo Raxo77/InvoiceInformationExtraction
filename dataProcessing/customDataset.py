@@ -2,8 +2,7 @@ from torch.utils.data import Dataset
 import os
 from bs4 import BeautifulSoup
 from dataProcessing.filterRawDataset import listDirectory
-from utils.CONFIG_PATH import CONFIG_PATH
-from utils.helperFunctions import getConfig, loadJSON
+from utils.helperFunctions import getConfig, loadJSON, CONFIG_PATH
 import dataProcessing.OCR as OCR
 from dataProcessing.filterRawDataset import getGoldLabels
 import warnings
@@ -21,13 +20,12 @@ class CustomDataset(Dataset):
 
     def __getitem__(self, instanceIdx):
         """
-
         :param instanceIdx:
         :return: dict with hOCR result and information to derive further features if desired
         """
 
         instanceFolderPath = self.instances[instanceIdx].path
-        #print(instanceFolderPath)
+        # print(instanceFolderPath)
         instanceFolderContent = listDirectory(instanceFolderPath, folderOnly=False)
 
         try:
@@ -74,8 +72,9 @@ class CustomDataset(Dataset):
 
         return data
 
+
 data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
-#print(data.__getitem__(2))
+# print(data.__getitem__(2))
 
 # data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
 # data.__getitem__(0)

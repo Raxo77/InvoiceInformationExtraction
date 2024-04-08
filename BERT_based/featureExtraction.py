@@ -2,8 +2,7 @@ import math
 import string
 
 from PIL import Image
-from utils.CONFIG_PATH import CONFIG_PATH
-from utils.helperFunctions import getConfig
+from utils.helperFunctions import getConfig, CONFIG_PATH
 from dataProcessing.customDataset import CustomDataset
 import numpy as np
 import re

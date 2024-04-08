@@ -1,9 +1,8 @@
 import Levenshtein
-from utils.helperFunctions import getConfig, createJSON
+from utils.helperFunctions import getConfig, createJSON, CONFIG_PATH
 from PIL import Image
 from dataProcessing.customDataset import CustomDataset
 import numpy as np
-from utils.CONFIG_PATH import CONFIG_PATH
 import re
 import matplotlib.pyplot as plt
 

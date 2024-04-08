@@ -110,11 +110,15 @@ def getGoldLabels(pathToJSON: str, targets: dict, dirPath: str = "") -> dict:
     temp = goldLabels
     goldLabels = {}
     for k, v in temp.items():
+        # TODO: redo this part -- currently 2-or-more-token tags are simply truncated, deleting all information past the first token
+        # fixed config-side - it is now longer allowed to enter multi-token labels; instead, such labels are split into their resp.
+        # subtokens
+
         if len(v) > 0:
             goldLabels[k] = v[0]
         else:
             goldLabels[k] = None
-    # goldLabels = {k: v[0] for k, v in goldLabels.items() if len(v) > 0 else k: None}
+
     if dirPath == "<same>":
         dirPath = pathToJSON[:-len("ground_truth_tags.json")]
 
@@ -123,3 +127,8 @@ def getGoldLabels(pathToJSON: str, targets: dict, dirPath: str = "") -> dict:
 
     return goldLabels
 
+
+if __name__ == '__main__':
+    a = getGoldLabels(r"C:\Users\fabia\InvoiceInformationExtraction\data\00001\ground_truth_tags.json",
+                      targets=getConfig("targetLabels", CONFIG_PATH), dirPath="<same>")
+    print(a)

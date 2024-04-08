@@ -1,6 +1,5 @@
 import torch
-from utils.CONFIG_PATH import CONFIG_PATH
-from utils.helperFunctions import loadJSON, getConfig, separate
+from utils.helperFunctions import loadJSON, getConfig, separate, CONFIG_PATH
 from dataProcessing.customDataset import CustomDataset
 from CloudScan_based.featureExtraction import featureCalculation
 import numpy as np
