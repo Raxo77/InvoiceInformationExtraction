@@ -1,10 +1,9 @@
 import string
-
 from transformers import BertTokenizer, BertModel
 import torch
 import os
 import pandas as pd
-from TorchCRF import CRF
+from torchcrf import CRF
 from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH
 from dataProcessing.customDataset import CustomDataset
 
@@ -49,7 +48,7 @@ def getGoldData(path: str):
 
 class InvoiceBERT(torch.nn.Module):
 
-    def __init__(self, dataset, tokenizer=TOKENIZER, model=MODEL, featureSize=2316, numLabels=9):
+    def __init__(self, tokenizer=TOKENIZER, model=MODEL, featureSize=2316, numLabels=10):
         super(InvoiceBERT, self).__init__()
 
         self.hiddenSize = model.config.hidden_size
@@ -63,15 +62,6 @@ class InvoiceBERT(torch.nn.Module):
         self.classifier = torch.nn.Linear(self.hiddenSize, numLabels)
         self.crf = CRF(numLabels, batch_first=True)
 
-        self.dataset = dataset
-        if len(dataset) < 1:
-            print("Warning: Provided Dataset is empty")
-
-        # For testing and illustratory purposes only
-        self.sampleSequence = self.getSequence(self.dataset.__getitem__(0))
-        self.sampleTokens, self.sampleTokenIDdict = self.tokenizeSequence(self.sampleSequence)
-        self.sampleEmbeddings, self.sampleEmbeddingsDict = self.embedSequence(self.sampleTokens,
-                                                                              self.sampleTokenIDdict["input_ids"])
 
     def getSequence(self, dataInstance):
         featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
@@ -327,7 +317,7 @@ class InvoiceBERT(torch.nn.Module):
             shuffledIndices = torch.randperm(len(dataset))
             for i in range(len(dataset)):
                 # get one specific invoice
-                # That is to say, currently invoices are fed in batches of 1 to the algorithm
+                # That is to say, invoices are fed in batches of 1 to the algorithm
                 dataInstance = dataset[shuffledIndices[i]]
                 preparedInput = self.prepareInput(dataInstance)
                 preparedInput = preparedInput.type(dtype=torch.float32)
@@ -348,41 +338,39 @@ class InvoiceBERT(torch.nn.Module):
             print(overallLoss)
         return resList
 
+    def testModel(self, dataset):
+        self.eval()
+        resList = []
+        for i in range(len(dataset)):
+            dataInstance = dataset[i]
+            preparedInput = self.prepareInput(dataInstance)
+            preparedInput = preparedInput.type(dtype=torch.float32)
+
+            instanceSequence = self.getSequence(dataInstance)
+            instanceTokens, instanceTokensDict = self.tokenizeSequence(instanceSequence)
+            labels = self.labelTokens(instanceTokens,
+                                      getGoldData(
+                                          os.path.join(dataInstance["instanceFolderPath"], "goldLabels.json"))
+                                      )
+            loss, tags = self.forward(preparedInput, labels)
+            resList.append((loss, tags))
+        return resList
+
 
 if __name__ == "__main__":
-    # def train(model, numEpochs, trainingData, lr=1e-4):
-    #     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
-    #     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=.1)
-    #
-    #     trainDataLoader = DataLoader(trainingData, batch_size=1, shuffle=True)
-    #
-    #     model.train()
-    #     initial_sums = ([torch.sum(p.data) for p in model.parameters() if p.requires_grad]
-    #     )
-    #     for epoch in range(numEpochs):
-    #         overallLoss = 0
-    #         for i in range(1):
-    #             inputTensor = model.prepareInput().type(dtype=torch.float32)
-    #             labels = labelTokens(model.tokens, getGoldData(r"C:\Users\fabia\NER_for_IIE\data\00003\goldLabels.json"))
-    #
-    #             model.zero_grad()
-    #
-    #             loss, tags = model.forward(inputTensor, labels)
-    #             loss.backward()
-    #             optimizer.step()
-    #
-    #             overallLoss += loss.item()
-    #     post_training_sums = ([torch.sum(p.data) for p in model.parameters() if p.requires_grad])
-    #     weights_changed = any(initial != post for initial, post in zip(initial_sums, post_training_sums))
-    #     print("Weights changed:", weights_changed)
-
     data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
     invoiceBERT = InvoiceBERT(data)
-    initial_sums = [torch.sum(p.data) for p in invoiceBERT.parameters() if p.requires_grad]
-    resList = invoiceBERT.trainModel(100, data)
-    post_training_sums = [torch.sum(p.data) for p in invoiceBERT.parameters() if p.requires_grad]
-    weights_changed = any(initial != post for initial, post in zip(initial_sums, post_training_sums))
-    print("Weights changed:", weights_changed)
-    print(resList[0])
-    print(resList[len(resList) // 2])
-    print(resList[-1])
+    #torch.save(invoiceBERT.state_dict(), r"C:\Users\fabia\InvoiceInformationExtraction\BERT_based\modelStateDict\BERTbased.pth")
+    invoiceBERT.load_state_dict(torch.load(r"C:\Users\fabia\InvoiceInformationExtraction\BERT_based\modelStateDict\BERTbased.pth"))
+    #print(invoiceBERT)
+    for param_tensor in invoiceBERT.state_dict():
+        print(param_tensor, "\t", invoiceBERT.state_dict()[param_tensor].size())
+#    print(invoiceBERT.testModel(data))
+#    initial_sums = [torch.sum(p.data) for p in invoiceBERT.parameters() if p.requires_grad]
+#    resList = invoiceBERT.trainModel(100, data)
+#    post_training_sums = [torch.sum(p.data) for p in invoiceBERT.parameters() if p.requires_grad]
+#    weights_changed = any(initial != post for initial, post in zip(initial_sums, post_training_sums))
+#    print("Weights changed:", weights_changed)
+#    print(resList[0])
+#    print(resList[len(resList) // 2])
+#    print(resList[-1])

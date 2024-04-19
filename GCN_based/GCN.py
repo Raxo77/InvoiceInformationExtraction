@@ -262,5 +262,6 @@ class InvoiceGCN(torch.nn.Module):
 if __name__ == '__main__':
     data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
     invoiceGCN = InvoiceGCN(data)
+    invoiceGCN.plotGraph(invoiceGCN.graphModeller(data[0]))
 
-    invoiceGCN.trainModel(10, data)
+    #invoiceGCN.trainModel(10, data)

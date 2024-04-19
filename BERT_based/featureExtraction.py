@@ -1,9 +1,7 @@
 import math
 import string
-
 from PIL import Image
 from utils.helperFunctions import getConfig, CONFIG_PATH
-from dataProcessing.customDataset import CustomDataset
 import numpy as np
 import re
 import pandas as pd
@@ -144,7 +142,7 @@ def logicFeatures(wordsInfo, hOCR, textualFeatures, numNGrams=4, titleThreshold=
         in wordsInfo}
 
     """
-    as the hOCR output contains no direct information on the fonz size, the height
+    as the hOCR output contains no direct information on the font size, the height
     of each token's bounding box will be used as proxy. To then assess, whether a toke
     is to be considered a title, the height of the bonding box will be compared to the average
     height of all bounding boxes in the document (maybe including a certain tolerance level)
@@ -222,14 +220,15 @@ def logicFeatures(wordsInfo, hOCR, textualFeatures, numNGrams=4, titleThreshold=
     return logicFeatures
 
 
-def deriveFeatures(dataInstance, vicinityThreshold=4):
+def deriveFeatures(dataInstance, includePunct,save=True, vicinityThreshold=4):
     hOCR = dataInstance["hOCR"]
 
-    # textual features
+    # wordsInfo serves as basis for the derivation of additional features. It contains the words identified by the
+    # OCR engine and the respective coordinates of each word's bounding box
     wordsInfo = []
     for word in hOCR.find_all("span", class_="ocrx_word"):
         lexem = word.get_text().replace("\n", "").replace(" ", "")
-        if lexem in string.punctuation:
+        if lexem in string.punctuation and not includePunct:
             continue
         coords = word["title"].split(";")[0].split(" ")[1:]
         coords = [int(i) for i in coords]
@@ -259,23 +258,32 @@ def deriveFeatures(dataInstance, vicinityThreshold=4):
 
     # , layoutFeatureDict[key], patternFeatureDict[key], logicFeaturesDict[key]] for
     # key in textualFeaturesDict.keys()
-    return jointDict
+    df = pd.DataFrame.from_dict(data=jointDict, orient="index")
 
+    if save and includePunct:
+        df.to_csv(os.path.join(dataInstance["instanceFolderPath"],"BERT_features.csv"))
+    elif save and not includePunct:
+        df.to_csv(os.path.join(dataInstance["instanceFolderPath"],"BERT_features_noPunct.csv"))
 
-def saveAsCSV(featuresDict, savePath=""):
-    df = pd.DataFrame.from_dict(data=featuresDict, orient="index")
-
-    if savePath:
-        df.to_csv(savePath)
 
     return df
 
 
-data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
-saveAsCSV(deriveFeatures(data.__getitem__(2)),
-          os.path.join(data.__getitem__(2)["instanceFolderPath"], r"BERT_features_noPunct.csv"))
-# a = saveAsCSV(deriveFeatures(data.__getitem__(0)))
-# for j in range(1):
-#     for i in (deriveFeatures(data.__getitem__(j))).items():
-#         print(i)
-#     separate()
+#def saveAsCSV(featuresDict, savePath=""):
+#    df = pd.DataFrame.from_dict(data=featuresDict, orient="index")
+#
+#    if savePath:
+#        df.to_csv(savePath)
+#    return df
+
+if __name__ == '__main__':
+    from dataProcessing.customDataset import CustomDataset
+
+    data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
+    #saveAsCSV(deriveFeatures(data.__getitem__(2)),
+    #          os.path.join(data.__getitem__(2)["instanceFolderPath"], r"BERT_features_noPunct.csv"))
+    # a = saveAsCSV(deriveFeatures(data.__getitem__(0)))
+    # for j in range(1):
+    #     for i in (deriveFeatures(data.__getitem__(j))).items():
+    #         print(i)
+

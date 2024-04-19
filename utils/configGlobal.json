@@ -1,6 +1,9 @@
 {
   "pathToDataFolder": "C:\\Users\\fabia\\InvoiceInformationExtraction\\data",
+  "pathToTestDataFolder" : null,
+  "pathToBERTbasedModel" : "C:\\Users\\fabia\\InvoiceInformationExtraction\\BERT_based\\modelStateDict",
   "groundTruthFileName": "ground_truth_words.json",
+  "numLabels" : 10,
   "filesToDelete": [
     "flat_information_delta.png",
     "warped_albedo.png",
@@ -25,7 +28,11 @@
       0.18
     ],
     "logicNumNGrams": 4,
-    "vicinityThreshold": 4
+    "vicinityThreshold": 4,
+    "tokenizer" : "bert-base-cased",
+    "model" : "bert-base-cased",
+    "inputFeatureSize" : 2316,
+    "pathToStateDict": "C:\\Users\\fabia\\InvoiceInformationExtraction\\BERT_based\\modelStateDict\\BERTbased.pth"
   },
   "targetLabels": {
     "invoiceDate": [

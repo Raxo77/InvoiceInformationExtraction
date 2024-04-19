@@ -49,7 +49,6 @@ def OCRengine(imageList: list, saveResultsPath="", groundTruthPath=""):
             image = imageInfo
 
         hOCR_data = pytesseract.image_to_pdf_or_hocr(image, extension="hocr")
-        print(hOCR_data)
         hOCR_list.append(hOCR_data.decode("utf-8"))
 
     hOCR_xml = BeautifulSoup(hOCR_list[0], features="lxml")
@@ -65,7 +64,9 @@ def OCRengine(imageList: list, saveResultsPath="", groundTruthPath=""):
             f.write(hOCR_xml)
 
     if groundTruthPath:
-        return hOCR_xml, compareOCRwithGroundTruth(hOCR_xml, groundTruthPath)
+        temp = compareOCRwithGroundTruth(hOCR_xml, groundTruthPath)
+        print(temp)
+        return hOCR_xml, temp
 
     else:
         return hOCR_xml, None
@@ -74,23 +75,23 @@ def OCRengine(imageList: list, saveResultsPath="", groundTruthPath=""):
 def compareOCRwithGroundTruth(hOCR_output, groundTruthPath):
     parsedOutput = BeautifulSoup(hOCR_output, features="lxml")
     words = parsedOutput.find_all("span", attrs="ocrx_word")
-    words = " ".join(word.get_text() for word in words)
+    words = "".join(word.get_text() for word in words)
 
     groundTruthText = loadJSON(groundTruthPath)
-    groundTruthText = " ".join(i["text"] for i in groundTruthText)
+    groundTruthText = "".join(i["text"] for i in groundTruthText)
 
-    missingCount = [0., []]
-    temp = groundTruthText.split()
-    temp = [i.replace(",", "") for i in temp]
-    for word in words.split():
-        if word.replace(",", "") not in temp:
-            missingCount[0] += 1
-            missingCount[1].append(word)
+#    missingCount = [0., []]
+#    temp = groundTruthText.split()
+#    temp = [i.replace(",", "") for i in temp]
+#    for word in words.split():
+#        if word.replace(",", "") not in temp:
+#            missingCount[0] += 1
+#            missingCount[1].append(word)
 
     distance = Levenshtein.distance(words, groundTruthText)
     similarity = 1 - distance / max(len(words), len(groundTruthText))
 
-    return similarity, missingCount
+    return similarity
 
 
 def runForAll(imageIsBlankThreshold=IMAGE_IS_BLANK_THRESHOLD):
