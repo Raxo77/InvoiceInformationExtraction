@@ -75,7 +75,7 @@ class InvoiceGCN(torch.nn.Module):
 
     def embedWords(self, wordSeq):
 
-        tokens = tokenizer(wordSeq, return_offsets_mapping=True)
+        tokens = self.tokenizer(wordSeq, return_offsets_mapping=True)
         offsets = tokens.encodings[0].offsets
 
         tokensPerWord = countTokensPerWord(wordSeq, offsets)

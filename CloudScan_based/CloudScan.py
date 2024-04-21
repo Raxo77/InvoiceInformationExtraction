@@ -1,10 +1,13 @@
 import torch
+from datetime import datetime
 from utils.helperFunctions import loadJSON, getConfig, separate, CONFIG_PATH
 from dataProcessing.customDataset import CustomDataset
 from CloudScan_based.featureExtraction import featureCalculation
 import numpy as np
 from sklearn.feature_extraction import FeatureHasher
 import pandas as pd
+
+# TODO: Change the append for the dataframes in the training and testing methods
 
 """
 For the nGrammer, ngrams of maximum length 4 are derived. I.e., if 4-grams are possible for a focal
@@ -27,13 +30,12 @@ def check_sequence_existence(tokens_text, tokens_seq):
 
 class CloudScanLSTM(torch.nn.Module):
 
-    def __init__(self, dataset, hashSize=2 ** 18, embeddingSize=500, inputSize=526, numLabels=10):
+    def __init__(self, hashSize=2 ** 18, embeddingSize=500, inputSize=527, numLabels=19):
         super(CloudScanLSTM, self).__init__()
 
         self.hasher = FeatureHasher(n_features=hashSize, input_type='string')
         self.embedding = torch.nn.Embedding(hashSize, embeddingSize)
 
-        self.feedforward1 = torch.nn.Linear(inputSize, 600)
         self.feedforward1 = torch.nn.Sequential(
             torch.nn.Dropout(.5),
             torch.nn.Linear(inputSize, 600),
@@ -58,10 +60,6 @@ class CloudScanLSTM(torch.nn.Module):
             torch.nn.Linear(600, numLabels),
             # torch.nn.Softmax(dim=1)
         )
-
-        self.dataset = dataset
-        if len(dataset) < 1:
-            print("Warning: Provided Dataset is empty")
 
     def nGrammer(self, dataInstance) -> list:
         nGrams = []
@@ -121,6 +119,7 @@ class CloudScanLSTM(torch.nn.Module):
 
     def getGoldLabels(self, dataInstance, feedback=False):
 
+        # Uses IOB-tagging scheme
         featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
         colNames = list(featuresDF.columns)
         colNames[0] = "wordKey"
@@ -131,7 +130,7 @@ class CloudScanLSTM(torch.nn.Module):
         hOCRcharSeq = "".join(list(map(lambda x: x.split("_")[0], featuresDF["wordKey"])))
         groundTruthCharSeq = [i["value"].replace(" ", "") for i in groundTruth.values() if i is not None]
         b = (list(map(lambda x: x.split("_")[0], featuresDF["wordKey"])))
-        labelTranslation = {f"{tag}-{i}": count + 1 + counter for count, i in enumerate(groundTruth.keys()) for
+        labelTranslation = {f"{tag}-{i}": (2 * count + 1) + (counter * 1) for count, i in enumerate(groundTruth.keys()) for
                             counter, tag in enumerate(["B", "I"])}
         labelTranslation["O"] = 0
 
@@ -174,17 +173,19 @@ class CloudScanLSTM(torch.nn.Module):
 
     def trainModel(self, numEpochs, dataset, lr=1e-5):
 
-        resList = []
+        epochData = pd.DataFrame(columns=['epoch', 'avgLoss'])
+        batchData = pd.DataFrame(columns=['epoch', 'batch', 'loss'])
 
         optimizer = torch.optim.Adam(self.parameters(), lr=lr)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=.1)
 
         self.train()
-        lossPerEpoch = []
         for epoch in range(numEpochs):
             print(f"Epoch {epoch + 1} / {numEpochs}")
-            lossPerBatch = []
+
+            overallEpochLoss = 0
             shuffledIndices = torch.randperm(len(dataset))
+
             for i in range(len(dataset)):
                 instance = dataset[shuffledIndices[i]]
                 nGramList = self.nGrammer(instance)
@@ -201,17 +202,56 @@ class CloudScanLSTM(torch.nn.Module):
                 self.zero_grad()
 
                 loss = torch.nn.functional.cross_entropy(logits, goldLabels)
-                # loss.requires_grad = True
-                print(i, loss)
-                lossPerBatch.append(loss.item())
+                batchData = batchData.append(
+                    {'epoch': epoch + 1, 'batch': i + 1, 'loss': loss.item()},
+                    ignore_index=True)
                 loss.backward()
                 optimizer.step()
-            #            print(np.mean(lossPerBatch))
-            print(f"Epoch: {epoch + 1}/{numEpochs}")
+                overallEpochLoss += loss.item()
+
+            overallEpochLoss = overallEpochLoss / len(dataset)
+            print(f"Avg. loss for epoch {epoch + 1}: {overallEpochLoss}")
+            epochData = epochData.append({'epoch': epoch + 1, 'avg_loss': overallEpochLoss}, ignore_index=True)
+
+
+        time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+        epochData.to_csv(f"./trainEpochData_{time}.csv")
+        batchData.to_csv(f"./trainBatchData_{time}.csv")
+        print("Training of CloudScan-based model complete")
+
+    def testModel(self, dataset):
+        testResults = pd.DataFrame(columns=['invoiceInstance', 'prediction', "goldLabels", "instanceLoss"])
+
+        self.eval()
+
+        with torch.no_grad():
+            for i in range(len(dataset)):
+                dataInstance = dataset[i]
+                nGramList = self.nGrammer(dataInstance)
+                derivedFeatures = featureCalculation(nGramList, dataInstance)
+                preparedInput, words = self.prepareInput(derivedFeatures, useTextualFeatures=True)
+                goldLabels, goldLabelsChar, labelTranslation = self.getGoldLabels(dataInstance)
+                goldLabels = torch.tensor([goldLabels])
+
+                logits = self.forward(preparedInput)
+                logits = logits[0]
+                goldLabels = goldLabels[0]
+                labels = torch.argmax(torch.nn.functional.softmax(logits, dim=-1), dim=-1)
+                loss = torch.nn.functional.cross_entropy(logits, goldLabels)
+
+                testResults = pd.concat(
+                    [testResults, pd.Series([dataInstance["instanceFolderPath"], labels, goldLabels, loss.item()])])
+        time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+        testResults.to_csv(f"./testResults_{time}.csv")
+
+        print("Testing of CloudScan-based model complete")
+        return testResults
 
 
 if __name__ == "__main__":
     data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
-    cloudScan = CloudScanLSTM(data)
-
-    cloudScan.trainModel(100, data)
+    cloudScan = CloudScanLSTM()
+    #torch.save(cloudScan.state_dict(), getConfig("CloudScan_based", CONFIG_PATH)["pathToStateDict"])
+    #cloudScan.load_state_dict(torch.load(getConfig("CloudScan_based", CONFIG_PATH)["pathToStateDict"]))
+    # cloudScan.trainModel(2, data)
+    cloudScan.testModel(data)

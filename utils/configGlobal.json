@@ -1,9 +1,11 @@
 {
-  "pathToDataFolder": "C:\\Users\\fabia\\InvoiceInformationExtraction\\data",
-  "pathToTestDataFolder" : null,
-  "pathToBERTbasedModel" : "C:\\Users\\fabia\\InvoiceInformationExtraction\\BERT_based\\modelStateDict",
+  "pathToDataFolder": "C:\\Users\\fabia\\NER_for_IIE\\data",
+  "pathToTestDataFolder": null,
+  "pathToCityGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\cities15000.csv",
+  "pathToCountryGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\countryNames.csv",
+  "pathToZIPGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\allCountriesZIPCodes.csv",
   "groundTruthFileName": "ground_truth_words.json",
-  "numLabels" : 10,
+  "numLabels": 10,
   "filesToDelete": [
     "flat_information_delta.png",
     "warped_albedo.png",
@@ -18,7 +20,7 @@
     "warped_UV.npz",
     "warped_WC.npz"
   ],
-  "imageIsBlankThreshold" : 254.5,
+  "imageIsBlankThreshold": 254.5,
   "gridSize": [
     11,
     16
@@ -29,10 +31,20 @@
     ],
     "logicNumNGrams": 4,
     "vicinityThreshold": 4,
-    "tokenizer" : "bert-base-cased",
-    "model" : "bert-base-cased",
-    "inputFeatureSize" : 2316,
-    "pathToStateDict": "C:\\Users\\fabia\\InvoiceInformationExtraction\\BERT_based\\modelStateDict\\BERTbased.pth"
+    "tokenizer": "bert-base-cased",
+    "model": "bert-base-cased",
+    "inputFeatureSize": 2316,
+    "numEpochs": 40,
+    "learningRate": 1e-5,
+    "pathToStateDict": "C:\\Users\\fabia\\NER_for_IIE\\BERT_based\\modelStateDict\\invoiceBERT-CRF.pth"
+  },
+  "CloudScan_based": {
+    "numEpochs": 40,
+    "learningRate": 1e-5,
+    "pathToStateDict": "C:\\Users\\fabia\\NER_for_IIE\\CloudScan_based\\modelStateDict\\cloudScan.pth"
+  },
+  "BBMC_based": {
+    "pathToStateDict": "C:\\Users\\fabia\\NER_for_IIE\\BBMC_based\\modelStateDict\\invoiceBBMC.pth"
   },
   "targetLabels": {
     "invoiceDate": [
@@ -57,7 +69,9 @@
     "issuerAddress": [
       "seller.address.street"
     ],
-    "issuerCity": ["seller.address.city"]
+    "issuerCity": [
+      "seller.address.city"
+    ]
   },
   "ensembleModels": {
     "useSubmodel1": true,

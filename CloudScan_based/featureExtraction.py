@@ -25,11 +25,21 @@ def featureCalculation(nGramList: list, dataInstance):
     # get tuple of image width, height
     imgWidth, imgHeight = Image.open(dataInstance["pathInvoicePNG"]).size
 
+   # citiesGazetteer = pd.read_csv(getConfig("pathToCityGazetteer", CONFIG_PATH), sep="\t")
+   # countryGazetteer = pd.read_csv(getConfig("pathToCountryGazetteer", CONFIG_PATH))
+   # ZIPCodesGazetteer = pd.read_csv(getConfig("pathToZIPGazetteer", CONFIG_PATH), header=None, sep="\t")
+
+    citiesGazetteer = []
+    countryGazetteer = []
+    ZIPCodesGazetteer = []
+
     # calculate the features as described in CloudScanPaper
     # nGramList is a list of sets containing ngram, focal word pairs
     for wordSet in nGramList:
         nGram, word = wordSet
         focalFeatures = (word, [], [], [], nGram)
+
+        # TEXTUAL FEATURES
 
         rawText = word.split("_")[0]
         focalFeatures[1].append(rawText)
@@ -37,6 +47,7 @@ def featureCalculation(nGramList: list, dataInstance):
         rawTextLastWord = nGram[-1].split("_")[0]
         focalFeatures[1].append(rawTextLastWord)
 
+        # take the raw text of the word two words left of the (first word in the) ngram - would be alterable
         rawTextTwoWordsLeft = None
         nextWordLeft = featuresDF.loc[featuresDF["wordKey"] == word, "left"].item()
         contextCount = 1
@@ -47,10 +58,14 @@ def featureCalculation(nGramList: list, dataInstance):
             rawTextTwoWordsLeft = nextWordLeft
         focalFeatures[1].append(rawTextTwoWordsLeft)
 
+        # get the standardised text of the focal word/first word in the ngram; notably, extending this to the entire
+        # ngram may be an aspect interesting to investigate in light of performance
         textPatterns = featuresDF.loc[featuresDF["wordKey"] == word, "standardisedText"].item()
         focalFeatures[1].append(textPatterns)
 
-        # when splitting *word* by "_" - [0] is word; [1] is x coords, [2] is y coords
+        # NUMERIC FEATURES
+
+        # when splitting *word* by "_" - [0] is word; [1] is x coords, [2] is y coords (upper left corner of bbox)
         bottomMargin = (imgHeight - int(word.split("_")[2]) + int(
             featuresDF.loc[featuresDF["wordKey"] == word, "wordHeight"].item())) / imgHeight
         focalFeatures[2].append(bottomMargin)
@@ -93,7 +108,6 @@ def featureCalculation(nGramList: list, dataInstance):
                                           1])) / imgWidth
         focalFeatures[2].append(leftMarginRelative)
 
-
         horizontalPosition = -100
         if rightMarginRelative != -100 and leftMarginRelative != -100:
             horizontalPosition = (leftMarginRelative * imgWidth) / (
@@ -110,11 +124,25 @@ def featureCalculation(nGramList: list, dataInstance):
         hasDigits = "d" in textPatterns
         focalFeatures[3].append(hasDigits)
 
+        # source for city list: https://github.com/datasets/world-cities/blob/master/scripts/process.py
+        # extracted from https://download.geonames.org/export/dump/
+        # contains list of cities with > 15,000 population
+        # TODO: load city gazetteer
 
-        isKnownCountry = 0
+        isKnownCity = 0 #word in citiesGazetteer.values
+        focalFeatures[3].append(isKnownCity)
+
+        # source for country list: https://gist.github.com/kalinchernev/486393efcca01623b18d
+        # is a list of all country names -- manually formatted Myanmar, {Burma} to easily get txt to csv
+        # TODO: load country gazetteer
+
+        isKnownCountry = 0 #word in countryGazetteer.values
         focalFeatures[3].append(isKnownCountry)
-        isKNownZip = 0
-        focalFeatures[3].append(isKNownZip)
+
+        # source for zip codes: https://download.geonames.org/export/dump/
+
+        isKnownZip = 0 #word in ZIPCodesGazetteer.values
+        focalFeatures[3].append(isKnownZip)
 
         # PLACEHOLDER INSERTION - the actual calculation of this feature is performed further below
         leftAlignment = 0

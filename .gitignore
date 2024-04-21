@@ -1,0 +1,3 @@
+/BERT_based/modelStateDict/invoiceBERT-CRF.pth
+/CloudScan_based/modelStateDict/cloudScan.pth
+/BBMC_based/modelStateDict/invoiceBBMC.pth

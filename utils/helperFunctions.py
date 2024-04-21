@@ -23,5 +23,5 @@ def getConfig(entity: str, pathToConfig: str):
 
 # Path to the global config file for all extractionScripts, models and the ensemble
 # - will be imported by all subsequent modules
-#CONFIG_PATH = r"C:\Users\fabia\NER_for_IIE\utils\configGlobal.json"
-CONFIG_PATH = r"C:\Users\fabia\InvoiceInformationExtraction\utils\configGlobal.json"
+CONFIG_PATH = r"C:\Users\fabia\NER_for_IIE\utils\configGlobal.json"
+#CONFIG_PATH = r"C:\Users\fabia\InvoiceInformationExtraction\utils\configGlobal.json"

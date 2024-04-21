@@ -18,13 +18,15 @@ if __name__ == '__main__':
     import torch
     from transformers import BertTokenizer, BertModel
 
-    # initialise train and test datasets
-    trainData = customDataset.CustomDataset(getConfig(CONFIG_PATH, "pathToDataFolder"))
-    testData = customDataset.CustomDataset(getConfig(CONFIG_PATH, "pathToTestDataFolder"))
+    # initialise, train and test datasets
+    trainData = customDataset.CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
+    testData = customDataset.CustomDataset(getConfig("pathToTestDataFolder", CONFIG_PATH))
 
     # initialise and load Model 1
     tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
     underlyingModel = BertModel.from_pretrained('bert-base-cased')
+    numEpochsInvoiceBERT = getConfig("BERT_based", CONFIG_PATH)["numEpochs"]
+    learningRateInvoiceBERT = getConfig("BERT_based", CONFIG_PATH)["learningRate"]
 
     invoiceBERT = BERT_CRF.InvoiceBERT(tokenizer=tokenizer,
                                        model=underlyingModel,
@@ -32,3 +34,11 @@ if __name__ == '__main__':
                                        numLabels=getConfig("numLabels", CONFIG_PATH)
                                        )
     invoiceBERT.load_state_dict(torch.load(getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"]))
+    resListTrainInvoiceBERT = invoiceBERT.trainModel(numEpochs=numEpochsInvoiceBERT,
+                                                     dataset=trainData,
+                                                     saveResults=True,
+                                                     lr=learningRateInvoiceBERT)
+    resListTestInvoiceBERT = invoiceBERT.testModel(dataset=testData)
+    torch.save(invoiceBERT.state_dict(), getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"])
+
+    # initialise, train and test Model 2
