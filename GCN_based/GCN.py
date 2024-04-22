@@ -258,6 +258,9 @@ class InvoiceGCN(torch.nn.Module):
             print(overallLoss)
         return resList
 
+    def testModel(self):
+        pass
+
 
 if __name__ == '__main__':
     data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
