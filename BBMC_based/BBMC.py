@@ -1,16 +1,35 @@
 import string
 from transformers import BertTokenizerFast, BertModel
 import torch
-from TorchCRF import CRF
+# from TorchCRF import CRF
+from torchcrf import CRF
 import pandas as pd
-from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH
+from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH, separate
 from datetime import datetime
 from dataProcessing.customDataset import CustomDataset
+import warnings
 
+# Suppress the pandas append deprecation warning
+warnings.filterwarnings(
+    action='ignore',
+    message="The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead."
+)
 TOKENIZER = BertTokenizerFast.from_pretrained('bert-base-cased')
 MODEL = BertModel.from_pretrained('bert-base-cased')
 tokenizer = TOKENIZER
 model = MODEL
+
+
+def countTokensPerWord(wordSeq: str, offsets: list) -> list:
+    wordIndex = 0
+    tokenCount = [0 for i in range(len(wordSeq.split()))]
+    for count in range(len(offsets) - 1):
+        tokenCount[wordIndex] += 1
+        if offsets[count][1] != offsets[count + 1][0]:
+            wordIndex += 1
+    # with the increment-before-if-approach, the first one is counted one time too many
+    tokenCount[0] -= 1
+    return tokenCount
 
 
 class InvoiceBBMC(torch.nn.Module):
@@ -68,15 +87,74 @@ class InvoiceBBMC(torch.nn.Module):
 
         emissions = self.fc1(x)
 
+        # Get rid of CLS tokens for the CRF
+        emissions = emissions[:, 1:-1]
+
+        mask = [1 for i in range(emissions.size(1))]
+        mask = torch.tensor([mask]).bool()
+
         if labels is not None:
-            loss = -self.crf(emissions, labels, reduction='mean')
+            loss = -self.crf(emissions, labels, reduction='mean', mask=mask)
             tags = self.crf.decode(emissions)
             return loss, tags
         else:
-            prediction = self.crf.decode(emissions, mask=inputTensor["attention_mask"].byte())
+            prediction = self.crf.decode(emissions, mask=mask)
             return -1, prediction
 
-    def getGoldLabels(self, dataInstance, feedback=False):
+    def getGoldLabels(self, dataInstance, tokenizedSequence):
+
+        dataSequenceAsList = self.getSequence(dataInstance).split(" ")
+        dataSequence = "".join(dataSequenceAsList).lower()
+        groundTruth = dataInstance["goldLabels"]
+
+        goldLabelsChar = ["O" for i in range(tokenizedSequence["input_ids"].size(1) - 2)]
+        tokensAsText = self.tokenizer.convert_ids_to_tokens(tokenizedSequence["input_ids"].tolist()[0],
+                                                            skip_special_tokens=True)
+
+        labelTranslation = {f"{tag}-{i}": (2 * count + 1) + (counter * 1) for count, i in
+                            enumerate(groundTruth.keys()) for
+                            counter, tag in enumerate(["B", "I"])}
+        labelTranslation["O"] = 0
+
+        for tag, subDict in groundTruth.items():
+            if subDict is not None:
+                truthStringAsList = subDict["value"].split(" ")
+                truthString = "".join(truthStringAsList).lower()
+                try:
+                    matchInString = dataSequence.index(truthString)
+                    startIndex = 0
+                    temp = 0
+                    # smaller than instead of == so as to cover cases where the focal token is inside another token
+                    while temp <= matchInString:
+                        temp += len(dataSequenceAsList[startIndex])
+                        startIndex += 1
+                    if temp != matchInString:
+                        startIndex -= 1
+                    wordIndices = [startIndex]
+                    temp = len(dataSequenceAsList[wordIndices[-1]])
+                    while temp < len(truthString):
+                        wordIndices.append(wordIndices[-1] + 1)
+                        temp += len(dataSequenceAsList[wordIndices[-1]])
+
+                    tokensPerWord = countTokensPerWord(" ".join(dataSequenceAsList),
+                                                       tokenizedSequence.encodings[0].offsets)
+                    startIndex2 = sum(tokensPerWord[:wordIndices[0]])
+                    tokenRange = sum([tokensPerWord[i] for i in wordIndices])
+                    goldLabelsChar[startIndex2] = f"B-{tag}"
+                    startIndex2 += 1
+                    tokenRange -= 1
+                    while tokenRange != 0:
+                        goldLabelsChar[startIndex2] = f"I-{tag}"
+                        startIndex2 += 1
+                        tokenRange -= 1
+
+                except ValueError:
+                    wordIndices = 0
+
+        goldLabels = [labelTranslation[i] for i in goldLabelsChar]
+        return goldLabels, goldLabelsChar, labelTranslation
+
+    def getGoldLabels2(self, dataInstance, feedback=False):
 
         # Uses IOB-tagging scheme
         featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
@@ -136,7 +214,9 @@ class InvoiceBBMC(torch.nn.Module):
                 instance = dataset[shuffledIndices[i]]
                 preparedInput = self.prepareInput(instance)
 
-                goldLabels, goldLabelsChar, labelTranslation = self.getGoldLabels(instance)
+                # self.getGoldLabels2(instance, preparedInput)
+                goldLabels, goldLabelsChar, labelTranslation = self.getGoldLabels(instance, preparedInput)
+
                 goldLabels = torch.tensor([goldLabels])
 
                 self.zero_grad()
@@ -148,6 +228,7 @@ class InvoiceBBMC(torch.nn.Module):
                 loss.backward()
                 optimizer.step()
                 overallEpochLoss += loss.item()
+
             overallEpochLoss = overallEpochLoss / len(dataset)
             epochData = epochData.append({'epoch': epoch + 1, 'avg_loss': overallEpochLoss}, ignore_index=True)
             print(f"Avg. loss for epoch {epoch + 1}: {overallEpochLoss}")
@@ -163,18 +244,21 @@ class InvoiceBBMC(torch.nn.Module):
                      "instanceLoss"])
         self.eval()
 
-        with torch.no_grad:
+        with torch.no_grad():
             for i in range(len(dataset)):
                 dataInstance = dataset[i]
                 preparedInput = self.prepareInput(dataInstance)
                 # preparedInput = preparedInput.type(dtype=torch.float32)
 
-                goldLabels, goldLabelsChar, labelTranslation = self.getGoldLabels(dataInstance)
+                goldLabels, goldLabelsChar, labelTranslation = self.getGoldLabels(dataInstance, preparedInput)
+                goldLabels = torch.tensor([goldLabels])
+
                 loss, predictions = self.forward(preparedInput, goldLabels)
 
                 testResults = pd.concat([testResults,
-                                         [dataInstance["instanceFolderPath"], predictions, goldLabels, goldLabelsChar,
-                                          labelTranslation, loss]])
+                                         pd.Series([dataInstance["instanceFolderPath"], predictions, goldLabels,
+                                                    goldLabelsChar,
+                                                    labelTranslation, loss])])
 
             time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
             testResults.to_csv(f"./testResults_{time}.csv")
@@ -189,5 +273,5 @@ if __name__ == '__main__':
 
     torch.save(invoiceBBMC.state_dict(), getConfig("BBMC_based", CONFIG_PATH)["pathToStateDict"])
     invoiceBBMC.load_state_dict(torch.load(getConfig("BBMC_based", CONFIG_PATH)["pathToStateDict"]))
-    invoiceBBMC.trainModel(2, data)
+    # invoiceBBMC.trainModel(2, data)
     invoiceBBMC.testModel(data)

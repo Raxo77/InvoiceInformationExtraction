@@ -1,6 +1,9 @@
+import string
+
 import torch
 import torchtext
-from TorchCRF import CRF
+#from TorchCRF import CRF
+from torchcrf import CRF
 import pandas as pd
 from collections import OrderedDict
 from utils.helperFunctions import getConfig, CONFIG_PATH
@@ -82,9 +85,7 @@ class Invoice_BiLSTM_CNN_CRF(torch.nn.Module):
         seqList = list(map(lambda x: x.split("_")[0], featuresDF["wordKey"]))
 
         seqString += seqList[0]
-        punct = ['.', ',', ';', ':', '!', '?', '-', '_', '(', ')', '[', ']', '{', '}', '"', "'", '...', '–', '—',
-                 '/',
-                 '\\', '|', '@', '#', '$', '%', '^', '&', '*', '+', '=', '<', '>', '~', '`']
+        punct = string.punctuation
 
         for i in seqList[1:]:
             if i in punct:

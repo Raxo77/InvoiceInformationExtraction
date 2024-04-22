@@ -51,7 +51,7 @@ def filterFiles(dirList: list, blacklist: list[str] = FILES_TO_DELETE, feedback:
 
     deletionInfo = {}
     for count, directory in enumerate(dirList):
-        deletionCont = 0
+        deletionCount = 0
         deletionInfo[f"{directory.name}_{count}"] = {"directoryPath": directory.path,
                                                      "deletedElements": [],
                                                      "sumDeletedElements": 0
@@ -61,10 +61,10 @@ def filterFiles(dirList: list, blacklist: list[str] = FILES_TO_DELETE, feedback:
                 os.remove(file.path)
 
                 deletionInfo[f"{directory.name}_{count}"]["deletedElements"].append((file.name, file.path))
-                deletionCont += 1
+                deletionCount += 1
                 if feedback:
                     print(f"removed {file.name} from {file.path}")
-        deletionInfo[f"{directory.name}_{count}"]["sumDeletedElements"] = deletionCont
+        deletionInfo[f"{directory.name}_{count}"]["sumDeletedElements"] = deletionCount
         if feedback:
             separate()
     if saveDeletions:
@@ -126,6 +126,4 @@ def getGoldLabels(pathToJSON: str, targets: dict, dirPath: str = "") -> dict:
 
 
 if __name__ == '__main__':
-    a = getGoldLabels(r"C:\Users\fabia\InvoiceInformationExtraction\data\00001\ground_truth_tags.json",
-                      targets=getConfig("targetLabels", CONFIG_PATH), dirPath="<same>")
-    print(a)
+    pass
