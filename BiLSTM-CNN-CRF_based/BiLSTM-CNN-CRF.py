@@ -5,10 +5,14 @@ import pandas as pd
 from collections import OrderedDict
 from utils.helperFunctions import getConfig, CONFIG_PATH
 from dataProcessing.customDataset import CustomDataset
+import nltk
+from nltk.util import ngrams
 
 """
 For embedding of words: Test with FastText and GloVe and check which has better performance
 """
+
+CONFIG_PATH = CONFIG_PATH
 
 
 def getPrintableChars():
@@ -34,7 +38,15 @@ For the max length of words 40 is taken as initial estimate
 
 class Invoice_BiLSTM_CNN_CRF(torch.nn.Module):
 
-    def __init__(self, dataset, wordEmbedding="fastText", maxWordsPerInvoice=512, charEmbeddingSize=30, kernelSize=3):
+    def __init__(self,
+                 dataset,
+                 wordEmbeddingVectorsPath=getConfig("pathToFastTextVectors", CONFIG_PATH),
+                 wordEmbeddingStoiPath=getConfig("pathToFastTextStoi", CONFIG_PATH),
+                 maxWordsPerInvoice=512,
+                 charEmbeddingSize=30,
+                 kernelSize=3,
+                 trainableEmbeddings=False,
+                 ):
         super(Invoice_BiLSTM_CNN_CRF, self).__init__()
         self.dataset = dataset
 
@@ -53,27 +65,23 @@ class Invoice_BiLSTM_CNN_CRF(torch.nn.Module):
         self.charLSTM = torch.nn.LSTM(charEmbeddingSize, 50, num_layers=1)
 
         # Word Embedding:
-        if wordEmbedding == "fastText":
-            weight = None
-            wordEmbeddingSize = None
-        elif wordEmbedding == "GloVe":
-            weight = None
-            wordEmbeddingSize = None
-        else:
-            print("Invalid entry for ´wordEmbedding´ --> defaulting to fastText")
-            weight = None
-            wordEmbeddingSize = None
-
-        self.wordEmbedding = torch.nn.Embedding.from_pretrained(weight)
+        vectors = torch.load(wordEmbeddingVectorsPath)
+        self.vectors = vectors
+        self.embeddingStoi = torch.load(wordEmbeddingStoiPath)
+        self.wordEmbedding = torch.nn.Embedding.from_pretrained(vectors, freeze=trainableEmbeddings)
+        self.embeddingForm = ("glove" * ("glove" in wordEmbeddingVectorsPath.lower())) + (
+                "fastText" * ("fasttext" in wordEmbeddingVectorsPath.lower()))
 
         # BiLSTM-CRF
-        self.bilstm = torch.nn.LSTM(wordEmbeddingSize + charEmbeddingSize, 512 // 2, bidirectional=True)
+        self.bilstm = torch.nn.LSTM(self.vectors.size(1) + charEmbeddingSize, 512 // 2, bidirectional=True)
         self.fc1 = torch.nn.Linear(512, 50)
         self.crf = CRF(10, batch_first=True)
 
     def getSequence(self, dataInstance):
 
-        featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
+        # As in the context of this model no tokenizer is employed, the input features for this model do not
+        # contain punctuation
+        featuresDF = pd.read_csv(dataInstance["BERT-basedNoPunctFeaturesPath"])
         colNames = list(featuresDF.columns)
         colNames[0] = "wordKey"
         featuresDF.columns = colNames
@@ -111,12 +119,55 @@ class Invoice_BiLSTM_CNN_CRF(torch.nn.Module):
         return charEmbeds
 
     def embedWords(self, wordSeq: str):
-        pass
+
+        wordSeq = self.padSequence(wordSeq.split(" "), self.maxWordsPerInvoice)
+        wordEmbeddings = []
+        if self.embeddingForm == "glove":
+            # As GloVe knows only whole words for embeddings, the entire sequence is split and each word in the
+            # split sequence is embedded - granted a corresponding embedding exists in the vocab - or assigned the
+            # OOV vector
+            for word in wordSeq:
+                word = word.lower()
+                if word == "<eos>":
+                    wordEmbeddings.append(torch.full((1, self.vectors.size(1)), -1))
+                elif word in self.embeddingStoi:
+                    wordEmbeddings.append(self.wordEmbedding(torch.tensor([self.embeddingStoi[word]])))
+                else:
+                    temp = torch.zeros([self.vectors.size(1)])
+                    temp = temp.view(1, -1)
+                    wordEmbeddings.append(temp)
+
+        else:
+            nltk.download("punkt")
+            for word in wordSeq:
+                word = word.lower()
+                if word == "<eos>":
+                    wordEmbeddings.append(torch.full((1, self.vectors.size(1)), -1))
+                elif word in self.embeddingStoi:
+                    wordEmbeddings.append(self.wordEmbedding(torch.tensor([self.embeddingStoi[word]])))
+                else:
+                    subwords = [''.join(gram) for gram in ngrams(word, 3)]
+                    subwordEmbeddings = []
+                    for subword in subwords:
+                        if subword in self.embeddingStoi:
+                            subwordEmbeddings.append(self.wordEmbedding(torch.tensor([self.embeddingStoi[subword]])))
+                        else:
+                            temp = torch.zeros([self.vectors.size(1)])
+                            temp = temp.view(1, -1)
+                            subwordEmbeddings.append(temp)
+                    if not len(subwords):
+                        subwordEmbeddings = [torch.zeros([self.vectors.size(1)]).view(1, -1)]
+                    subwordEmbeddings = torch.stack(subwordEmbeddings).mean(dim=0)
+                    wordEmbeddings.append(subwordEmbeddings)
+
+        wordEmbeddings = torch.stack(wordEmbeddings)
+        wordEmbeddings = wordEmbeddings.view(-1, self.vectors.size(1))
+        return wordEmbeddings
 
     def prepareInput(self, dataInstance):
 
         invoiceSeq = self.getSequence(dataInstance)
-
+        numPadded = len(invoiceSeq.split(" "))
         charEmbeddings = self.embedChars(invoiceSeq)
         charEmbeddings = torch.permute(charEmbeddings, (0, 2, 1))
         charEmbeddings = self.conv1d(charEmbeddings)
@@ -124,10 +175,11 @@ class Invoice_BiLSTM_CNN_CRF(torch.nn.Module):
         charEmbeddings, _ = self.charLSTM(charEmbeddings)
         charEmbeddings = charEmbeddings[:, -1, :]
 
-        wordEmbeddings = self.embedWords()
+        wordEmbeddings = self.embedWords(invoiceSeq)
 
-        preparedInput = torch.cat(wordEmbeddings, charEmbeddings)
-        return preparedInput
+        preparedInput = torch.cat([wordEmbeddings, charEmbeddings], dim=1)
+        numPadded = self.maxWordsPerInvoice - numPadded
+        return preparedInput, numPadded
 
     def forward(self, inputTensor, labels=None):
 
@@ -142,6 +194,9 @@ class Invoice_BiLSTM_CNN_CRF(torch.nn.Module):
             prediction = self.crf.decode(emissions, mask=inputTensor["attention_mask"].byte())
             return -1, prediction
 
+    def getGoldLabels(self, numPadded):
+        pass
+
     def trainModel(self, dataset, numEpochs=40, lr=1e-3):
 
         optimizer = torch.optim.Adam(self.parameters(), lr=lr)
@@ -154,7 +209,7 @@ class Invoice_BiLSTM_CNN_CRF(torch.nn.Module):
             shuffledIndices = torch.randperm(len(dataset))
             for i in range(len(dataset)):
                 instance = dataset[shuffledIndices[i]]
-                preparedInput = self.prepareInput(instance)
+                preparedInput, numPadded = self.prepareInput(instance)
                 goldLabels = 0  # TODO !!!
                 self.zero_grad()
                 loss, predictions = self.forward(preparedInput, goldLabels)
@@ -168,7 +223,5 @@ class Invoice_BiLSTM_CNN_CRF(torch.nn.Module):
 if __name__ == '__main__':
     data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
     invoice_BiLSTM_CNN_CRF = Invoice_BiLSTM_CNN_CRF(data)
-    temp = invoice_BiLSTM_CNN_CRF.prepareInput(data[0])
-
-    print(temp)
-    print(temp.size())
+    # temp = invoice_BiLSTM_CNN_CRF.prepareInput(data[0])
+    invoice_BiLSTM_CNN_CRF.trainModel(data)

@@ -1,6 +1,10 @@
 {
   "pathToDataFolder": "C:\\Users\\fabia\\NER_for_IIE\\data",
   "pathToTestDataFolder": null,
+  "pathToFastTextVectors": "D:\\fastText\\fastText_vectors.pth",
+  "pathToFastTextStoi": "D:\\fastText\\fastText_stoi.pth",
+  "pathToGloVeVectors": "D:\\GloVe\\glove_vectors.pth",
+  "pathToGloVeStoi": "D:\\GloVe\\glove_stoi.pth",
   "pathToCityGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\cities15000.csv",
   "pathToCountryGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\countryNames.csv",
   "pathToZIPGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\allCountriesZIPCodes.csv",

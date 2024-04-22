@@ -14,6 +14,7 @@ MODEL = BertModel.from_pretrained('bert-base-cased')
 tokenizer = TOKENIZER
 model = MODEL
 
+torch.manual_seed(123)
 
 def flattenList(nestedList):
     flatList = []
@@ -306,7 +307,10 @@ class InvoiceBERT(torch.nn.Module):
         else:
             return self.crf.decode(emissions, mask=mask.byte())
 
-    def trainModel(self, numEpochs, dataset, lr=1e-3):
+    def trainModel(self, numEpochs, dataset, trainHistoryPath="", lr=1e-3):
+
+        if trainHistoryPath:
+            trainHistory = pd.read_csv(trainHistoryPath)
 
         self.train()
         optimizer = torch.optim.Adam(self.parameters(), lr=lr)
@@ -323,6 +327,11 @@ class InvoiceBERT(torch.nn.Module):
 
             for i in range(len(dataset)):
                 dataInstance = dataset[shuffledIndices[i]]
+                pathToInstance = dataInstance["instanceFolderPath"]
+
+                if trainHistoryPath and f"{pathToInstance}_{epoch}" in trainHistory.values:
+                    continue
+
                 preparedInput = self.prepareInput(dataInstance)
                 preparedInput = preparedInput.type(dtype=torch.float32)
 
@@ -343,6 +352,9 @@ class InvoiceBERT(torch.nn.Module):
                 optimizer.step()
                 overallEpochLoss += loss.item()
 
+                if trainHistoryPath:
+                    trainHistory.loc[len(trainHistory)] = f"{pathToInstance}_{epoch}"
+
             overallEpochLoss = overallEpochLoss / len(dataset)
             print(f"Avg. loss for epoch {epoch + 1}: {overallEpochLoss}")
             epochData = epochData.append({'epoch': epoch + 1, 'avg_loss': overallEpochLoss}, ignore_index=True)
@@ -350,6 +362,10 @@ class InvoiceBERT(torch.nn.Module):
         time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
         epochData.to_csv(f"./trainEpochData_{time}.csv")
         batchData.to_csv(f"./trainBatchData_{time}.csv")
+
+        if trainHistoryPath:
+            trainHistory.to_csv(trainHistoryPath)
+
         print("Training of BERT-CRF complete")
 
     def testModel(self, dataset):
@@ -387,4 +403,4 @@ if __name__ == "__main__":
 
     invoiceBERT.load_state_dict(torch.load(getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"]))
 
-    invoiceBERT.trainModel(2, data)
+    invoiceBERT.trainModel(2, data, trainHistoryPath=r"C:\Users\fabia\NER_for_IIE\BERT_based\trainHistory.csv")
