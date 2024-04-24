@@ -182,9 +182,9 @@ def logicFeatures(wordsInfo, hOCR, textualFeatures, numNGrams=4, titleThreshold=
                 if len(nGramSequence[direction]) > 2:
                     # ASSUMING ONLY A LEFT TO RIGHT AND BOTTOM-DOWN CALCULATION METHOD:
                     if direction == "above":
-                        result = Decimal(nGramSequence[direction][0].split("_")[0])
-                        summation = sum([Decimal(i.split("_")[0]) for i in nGramSequence[direction][1:]])
-                        product = np.product([Decimal(i.split("_")[0]) for i in nGramSequence[direction][1:]])
+                        result = Decimal(nGramSequence[direction][0].split("_")[0].replace(".", "").replace(",", ""))
+                        summation = sum([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in nGramSequence[direction][1:]])
+                        product = np.product([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in nGramSequence[direction][1:]])
 
                         if result == summation:
                             logicFeatures[nGramSequence[direction][0]]["isSum"] = True
@@ -199,9 +199,9 @@ def logicFeatures(wordsInfo, hOCR, textualFeatures, numNGrams=4, titleThreshold=
 
                     # direction == "above"
                     else:
-                        result = Decimal(nGramSequence[direction][-1].split("_")[0])
-                        summation = sum([Decimal(i.split("_")[0]) for i in nGramSequence[direction][:-1]])
-                        product = np.product([Decimal(i.split("_")[0]) for i in nGramSequence[direction][:-1]])
+                        result = Decimal(nGramSequence[direction][-1].split("_")[0].replace(".", "").replace(",", ""))
+                        summation = sum([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in nGramSequence[direction][:-1]])
+                        product = np.product([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in nGramSequence[direction][:-1]])
 
                         if result == summation:
                             logicFeatures[nGramSequence[direction][-1]]["isSum"] = True
@@ -220,7 +220,7 @@ def logicFeatures(wordsInfo, hOCR, textualFeatures, numNGrams=4, titleThreshold=
     return logicFeatures
 
 
-def deriveFeatures(dataInstance, includePunct,save=True, vicinityThreshold=4):
+def deriveFeatures(dataInstance, includePunct, save=True, vicinityThreshold=4):
     hOCR = dataInstance["hOCR"]
 
     # wordsInfo serves as basis for the derivation of additional features. It contains the words identified by the
@@ -261,15 +261,14 @@ def deriveFeatures(dataInstance, includePunct,save=True, vicinityThreshold=4):
     df = pd.DataFrame.from_dict(data=jointDict, orient="index")
 
     if save and includePunct:
-        df.to_csv(os.path.join(dataInstance["instanceFolderPath"],"BERT_features.csv"))
+        df.to_csv(os.path.join(dataInstance["instanceFolderPath"], "BERT_features.csv"))
     elif save and not includePunct:
-        df.to_csv(os.path.join(dataInstance["instanceFolderPath"],"BERT_features_noPunct.csv"))
-
+        df.to_csv(os.path.join(dataInstance["instanceFolderPath"], "BERT_features_noPunct.csv"))
 
     return df
 
 
-#def saveAsCSV(featuresDict, savePath=""):
+# def saveAsCSV(featuresDict, savePath=""):
 #    df = pd.DataFrame.from_dict(data=featuresDict, orient="index")
 #
 #    if savePath:
@@ -280,10 +279,9 @@ if __name__ == '__main__':
     from dataProcessing.customDataset import CustomDataset
 
     data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
-    #saveAsCSV(deriveFeatures(data.__getitem__(2)),
+    # saveAsCSV(deriveFeatures(data.__getitem__(2)),
     #          os.path.join(data.__getitem__(2)["instanceFolderPath"], r"BERT_features_noPunct.csv"))
     # a = saveAsCSV(deriveFeatures(data.__getitem__(0)))
     # for j in range(1):
     #     for i in (deriveFeatures(data.__getitem__(j))).items():
     #         print(i)
-

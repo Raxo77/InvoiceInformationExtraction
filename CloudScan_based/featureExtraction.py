@@ -7,8 +7,12 @@ from dateutil.parser import parse, ParserError
 from dataProcessing.customDataset import CustomDataset
 
 
-def featureCalculation(nGramList: list, dataInstance):
+def featureCalculation(nGramList: list, dataInstance, citiesGazetteer=pd.DataFrame([]),
+                       countryGazetteer=pd.DataFrame([]), ZIPCodesGazetteer=pd.DataFrame([])):
     """
+    :param citiesGazetteer:
+    :param countryGazetteer:
+    :param ZIPCodesGazetteer:
     :param nGramList: a list of sets of ngrams for the corresponding invoice
     :param dataInstance: the concrete dataInstance for which to deriveFeatures; cf. CustomDataset
     :return:
@@ -25,13 +29,9 @@ def featureCalculation(nGramList: list, dataInstance):
     # get tuple of image width, height
     imgWidth, imgHeight = Image.open(dataInstance["pathInvoicePNG"]).size
 
-   # citiesGazetteer = pd.read_csv(getConfig("pathToCityGazetteer", CONFIG_PATH), sep="\t")
-   # countryGazetteer = pd.read_csv(getConfig("pathToCountryGazetteer", CONFIG_PATH))
-   # ZIPCodesGazetteer = pd.read_csv(getConfig("pathToZIPGazetteer", CONFIG_PATH), header=None, sep="\t")
-
-    citiesGazetteer = []
-    countryGazetteer = []
-    ZIPCodesGazetteer = []
+    # citiesGazetteer = pd.read_csv(getConfig("pathToCityGazetteer", CONFIG_PATH), sep="\t")
+    # countryGazetteer = pd.read_csv(getConfig("pathToCountryGazetteer", CONFIG_PATH))
+    # ZIPCodesGazetteer = pd.read_csv(getConfig("pathToZIPGazetteer", CONFIG_PATH), header=None, sep="\t")
 
     # calculate the features as described in CloudScanPaper
     # nGramList is a list of sets containing ngram, focal word pairs
@@ -127,21 +127,16 @@ def featureCalculation(nGramList: list, dataInstance):
         # source for city list: https://github.com/datasets/world-cities/blob/master/scripts/process.py
         # extracted from https://download.geonames.org/export/dump/
         # contains list of cities with > 15,000 population
-        # TODO: load city gazetteer
-
-        isKnownCity = 0 #word in citiesGazetteer.values
+        isKnownCity = word in citiesGazetteer.values
         focalFeatures[3].append(isKnownCity)
 
         # source for country list: https://gist.github.com/kalinchernev/486393efcca01623b18d
         # is a list of all country names -- manually formatted Myanmar, {Burma} to easily get txt to csv
-        # TODO: load country gazetteer
-
-        isKnownCountry = 0 #word in countryGazetteer.values
+        isKnownCountry = word in countryGazetteer.values
         focalFeatures[3].append(isKnownCountry)
 
         # source for zip codes: https://download.geonames.org/export/dump/
-
-        isKnownZip = 0 #word in ZIPCodesGazetteer.values
+        isKnownZip = word in ZIPCodesGazetteer.values
         focalFeatures[3].append(isKnownZip)
 
         # PLACEHOLDER INSERTION - the actual calculation of this feature is performed further below

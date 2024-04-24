@@ -1,10 +1,10 @@
 {
-  "pathToDataFolder": "C:\\Users\\fabia\\NER_for_IIE\\data",
-  "pathToTestDataFolder": null,
-  "pathToFastTextVectors": "D:\\fastText\\fastText_vectors.pth",
-  "pathToFastTextStoi": "D:\\fastText\\fastText_stoi.pth",
-  "pathToGloVeVectors": "D:\\GloVe\\glove_vectors.pth",
-  "pathToGloVeStoi": "D:\\GloVe\\glove_stoi.pth",
+  "pathToDataFolder": "F:\\TrainSplit2\\10.35097-1694\\10.35097-1694\\data\\dataset\\inv3d_train_part_2_of_4\\train_part_2_of_4",
+  "pathToTestDataFolder": "F:\\TestSplit\\data\\dataset\\inv3d_test\\inv3d_test\\test",
+  "pathToFastTextVectors": "F:\\fastText\\fastText_vectors.pth",
+  "pathToFastTextStoi": "F:\\fastText\\fastText_stoi.pth",
+  "pathToGloVeVectors": "F:\\GloVe\\glove_vectors.pth",
+  "pathToGloVeStoi": "F:\\GloVe\\glove_stoi.pth",
   "pathToCityGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\cities15000.csv",
   "pathToCountryGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\countryNames.csv",
   "pathToZIPGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\allCountriesZIPCodes.csv",
@@ -38,10 +38,11 @@
     "tokenizer": "bert-base-cased",
     "model": "bert-base-cased",
     "inputFeatureSize": 2316,
-    "numEpochs": 40,
-    "learningRate": 1e-5,
+    "numEpochs": 1,
+    "learningRate": 1e-6,
     "numLabels": 10,
-    "pathToStateDict": "C:\\Users\\fabia\\NER_for_IIE\\BERT_based\\modelStateDict\\invoiceBERT-CRF.pth"
+    "pathToStateDict": "C:\\Users\\fabia\\InvoiceInformationExtraction\\BERT_based\\modelStateDict\\invoiceBERT-CRF.pth",
+    "pathToTrainingHistory": "C:\\Users\\fabia\\InvoiceInformationExtraction\\BERT_based\\trainHistory.csv"
   },
   "CloudScan_based": {
     "numEpochs": 40,
@@ -50,9 +51,6 @@
   },
   "BBMC_based": {
     "pathToStateDict": "C:\\Users\\fabia\\NER_for_IIE\\BBMC_based\\modelStateDict\\invoiceBBMC.pth"
-  },
-  "BiLSTM-CNN-CRF_based": {
-    "pathToStateDict": ""
   },
   "GCN_based": {
     "pathToStateDict": "",

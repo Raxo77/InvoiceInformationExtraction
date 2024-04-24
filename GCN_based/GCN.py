@@ -1,4 +1,5 @@
 import string
+from datetime import datetime
 import numpy as np
 import torch
 import networkx as nx
@@ -33,18 +34,19 @@ def countTokensPerWord(wordSeq: str, offsets: list) -> list:
 
 class InvoiceGCN(torch.nn.Module):
 
-    def __init__(self, dataset, model=model, tokenizer=tokenizer):
+    def __init__(self, dataset, numClasses=getConfig("GCN_based", CONFIG_PATH)["numLabels"], model=model,
+                 tokenizer=tokenizer):
         super(InvoiceGCN, self).__init__()
 
         self.dataset = dataset
         self.initFilterNumber = 16
-        self.numClasses = 10
+        self.numClasses = numClasses
 
         self.tokenizer = tokenizer
         self.embeddings = model.embeddings
 
         self.relu = torch.nn.ReLU()
-        self.gcn1 = ChebConv(785, self.initFilterNumber, K=3)
+        self.gcn1 = ChebConv(782, self.initFilterNumber, K=3)
         self.gcn2 = ChebConv(self.initFilterNumber, 2 * self.initFilterNumber, K=3)
         self.gcn3 = ChebConv(2 * self.initFilterNumber, 4 * self.initFilterNumber, K=3)
         self.gcn4 = ChebConv(4 * self.initFilterNumber, 8 * self.initFilterNumber, K=3)
@@ -52,7 +54,7 @@ class InvoiceGCN(torch.nn.Module):
         self.softmax = torch.nn.Softmax()
 
     def getSequence(self, dataInstance):
-        featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
+        featuresDF = pd.read_csv(dataInstance["BERT-basedNoPunctFeaturesPath"])
         colNames = list(featuresDF.columns)
         colNames[0] = "wordKey"
         featuresDF.columns = colNames
@@ -61,9 +63,7 @@ class InvoiceGCN(torch.nn.Module):
         seqList = list(map(lambda x: x.split("_")[0], featuresDF["wordKey"]))
 
         seqString += seqList[0]
-        punct = ['.', ',', ';', ':', '!', '?', '-', '_', '(', ')', '[', ']', '{', '}', '"', "'", '...', '–', '—',
-                 '/',
-                 '\\', '|', '@', '#', '$', '%', '^', '&', '*', '+', '=', '<', '>', '~', '`']
+        punct = string.punctuation
 
         for i in seqList[1:]:
             if i in punct:
@@ -126,7 +126,7 @@ class InvoiceGCN(torch.nn.Module):
 
     def getGoldLabels(self, dataInstance, feedback=False):
 
-        featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
+        featuresDF = pd.read_csv(dataInstance["BERT-basedNoPunctFeaturesPath"])
         colNames = list(featuresDF.columns)
         colNames[0] = "wordKey"
         featuresDF.columns = colNames
@@ -136,7 +136,8 @@ class InvoiceGCN(torch.nn.Module):
         hOCRcharSeq = "".join(list(map(lambda x: x.split("_")[0], featuresDF["wordKey"])))
         groundTruthCharSeq = [i["value"].replace(" ", "") for i in groundTruth.values() if i is not None]
         b = (list(map(lambda x: x.split("_")[0], featuresDF["wordKey"])))
-        labelTranslation = {f"{tag}-{i}": count + 1 + counter for count, i in enumerate(groundTruth.keys()) for
+        labelTranslation = {f"{tag}-{i}": (2 * count + 1) + (counter * 1) for count, i in
+                            enumerate(groundTruth.keys()) for
                             counter, tag in enumerate(["B", "I"])}
         labelTranslation["O"] = 0
 
@@ -167,7 +168,7 @@ class InvoiceGCN(torch.nn.Module):
         # This is done to circumnavigate issues arising from different "tokenization" of hOCR and groundTruth strings
 
     def getEdges(self, dataInstance):
-        featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
+        featuresDF = pd.read_csv(dataInstance["BERT-basedNoPunctFeaturesPath"])
         colNames = list(featuresDF.columns)
         colNames[0] = "wordKey"
         featuresDF.columns = colNames
@@ -198,7 +199,7 @@ class InvoiceGCN(torch.nn.Module):
         nodeWords, nodeFeatures, nodeLabels = self.getNodes(dataInstance)
         edgeIndex = self.getEdges(dataInstance)
 
-        featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
+        featuresDF = pd.read_csv(dataInstance["BERT-basedNoPunctFeaturesPath"])
         colNames = list(featuresDF.columns)
         colNames[0] = "wordKey"
         featuresDF.columns = colNames
@@ -226,23 +227,30 @@ class InvoiceGCN(torch.nn.Module):
 
         return x
 
-    def trainModel(self, numEpochs, dataset, lr=1e-3):
-
-        resList = []
+    def trainModel(self, numEpochs, dataset, trainHistoryPath="", lr=1e-3):
 
         optimizer = torch.optim.Adam(self.parameters(), lr=lr)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=.1)
         criterion = torch.nn.CrossEntropyLoss()
 
+        epochData = pd.DataFrame(columns=['epoch', 'avgLoss'])
+        batchData = pd.DataFrame(columns=['epoch', 'batch', 'loss'])
+
+        if trainHistoryPath:
+            trainHistory = pd.read_csv(trainHistoryPath)
+
         self.train()
         for epoch in range(numEpochs):
             print(f"Epoch {epoch + 1} / {numEpochs}")
-            overallLoss = 0
+
             shuffledIndices = torch.randperm(len(dataset))
             for i in range(len(dataset)):
-                # get one specific invoice
-                # That is to say, currently invoices are fed in batches of 1 to the algorithm
                 dataInstance = dataset[shuffledIndices[i]]
+                pathToInstance = dataInstance["instanceFolderPath"]
+
+                if trainHistoryPath and f"{pathToInstance}_{epoch}" in trainHistory.values:
+                    continue
+
                 graphData = self.graphModeller(dataInstance)
                 goldLabels = graphData.y
 
@@ -250,21 +258,55 @@ class InvoiceGCN(torch.nn.Module):
                 x = self.forward(graphData)
                 predictions = torch.argmax(x, dim=1)
                 loss = criterion(x, goldLabels)
-                resList.append((loss, predictions))
                 loss.backward()
                 optimizer.step()
 
-                overallLoss += loss.item()
-            print(overallLoss)
-        return resList
+                if trainHistoryPath:
+                    trainHistory.loc[len(trainHistory)] = f"{pathToInstance}_{epoch}"
+                batchData = batchData.append(
+                    {'epoch': epoch + 1, 'batch': i + 1, 'loss': loss.item()},
+                    ignore_index=True)
 
-    def testModel(self):
-        pass
+            overallEpochLoss = overallEpochLoss / len(dataset)
+            epochData = epochData.append({'epoch': epoch + 1, 'avg_loss': overallEpochLoss}, ignore_index=True)
+            print(f"Avg. loss for epoch {epoch + 1}: {overallEpochLoss}")
+        time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+        epochData.to_csv(f"./trainEpochData_{time}.csv")
+        batchData.to_csv(f"./trainBatchData_{time}.csv")
+
+        if trainHistoryPath:
+            trainHistory.to_csv(trainHistoryPath)
+
+        print("Training of GCN-based model complete")
+
+    def testModel(self, dataset):
+        testResults = pd.DataFrame(columns=['invoiceInstance', 'prediction', "goldLabels", "instanceLoss"])
+        criterion = torch.nn.CrossEntropyLoss()
+        self.eval()
+
+        with torch.no_grad:
+            for i in range(len(dataset)):
+                dataInstance = data[i]
+                graphData = self.graphModeller(dataInstance)
+                goldLabels = graphData.y
+
+                self.zero_grad()
+                x = self.forward(graphData)
+                predictions = torch.argmax(x, dim=1)
+                loss = criterion(x, goldLabels)
+                testResults = pd.concat(
+                    [testResults, [dataInstance["instanceFolderPath"], predictions, goldLabels, loss]])
+
+        time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+        testResults.to_csv(f"./testResults_{time}.csv")
+
+        print("Testing of BERT-CRF complete")
+        return testResults
 
 
 if __name__ == '__main__':
     data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
     invoiceGCN = InvoiceGCN(data)
-    invoiceGCN.plotGraph(invoiceGCN.graphModeller(data[0]))
+    invoiceGCN.trainModel(2, data)
 
-    #invoiceGCN.trainModel(10, data)
+    # invoiceGCN.trainModel(10, data)

@@ -60,7 +60,7 @@ class CustomDataset(Dataset):
 
         # Get wordpos features and load into data dict
         try:
-            print(f"{instanceFolderPath}\\wordposFeatures.json")
+            #print(f"{instanceFolderPath}\\wordposFeatures.json")
             wordposFeatures = loadJSON(f"{instanceFolderPath}\\wordposFeatures.json")
         except FileNotFoundError:
             wordposFeatures = TemplateDetection.wordposFeatures(data)

@@ -16,29 +16,49 @@ if __name__ == '__main__':
     import dataProcessing.customDataset as customDataset
     import BERT_based.BERT_CRF as BERT_CRF
     import torch
-    from transformers import BertTokenizer, BertModel
+    from transformers import BertTokenizerFast, BertModel
+
+    # get device, i.e., GPU or CPU
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # initialise, train and test datasets
     trainData = customDataset.CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
     testData = customDataset.CustomDataset(getConfig("pathToTestDataFolder", CONFIG_PATH))
 
-    # initialise and load Model 1
-    tokenizer = BertTokenizer.from_pretrained('bert-base-cased')
-    underlyingModel = BertModel.from_pretrained('bert-base-cased')
-    numEpochsInvoiceBERT = getConfig("BERT_based", CONFIG_PATH)["numEpochs"]
-    learningRateInvoiceBERT = getConfig("BERT_based", CONFIG_PATH)["learningRate"]
 
-    invoiceBERT = BERT_CRF.InvoiceBERT(tokenizer=tokenizer,
-                                       model=underlyingModel,
-                                       featureSize=getConfig("BERT_based", CONFIG_PATH)["inputFeatureSize"],
-                                       numLabels=getConfig("numLabels", CONFIG_PATH)
-                                       )
-    invoiceBERT.load_state_dict(torch.load(getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"]))
-    resListTrainInvoiceBERT = invoiceBERT.trainModel(numEpochs=numEpochsInvoiceBERT,
-                                                     dataset=trainData,
-                                                     saveResults=True,
-                                                     lr=learningRateInvoiceBERT)
-    resListTestInvoiceBERT = invoiceBERT.testModel(dataset=testData)
-    torch.save(invoiceBERT.state_dict(), getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"])
+    def subModel1(train, test):
 
-    # initialise, train and test Model 2
+        # INITIALISE AND LOAD MODEL 1
+        tokenizerBERT = BertTokenizerFast.from_pretrained(getConfig("BERT_based", CONFIG_PATH)["tokenizer"])
+        underlyingModelBERT = BertModel.from_pretrained(getConfig("BERT_based", CONFIG_PATH)["model"])
+        numEpochsInvoiceBERT = getConfig("BERT_based", CONFIG_PATH)["numEpochs"]
+        learningRateInvoiceBERT = getConfig("BERT_based", CONFIG_PATH)["learningRate"]
+        inputFeatureSizeBERT = getConfig("BERT_based", CONFIG_PATH)["inputFeatureSize"]
+        pathToSavedVersionBERT = getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"]
+        pathToTrainingHistoryBERT = getConfig("BERT_based", CONFIG_PATH)["pathToTrainingHistory"]
+        numLabelsBERT = getConfig("BERT_based", CONFIG_PATH)["numLabels"]
+
+        invoiceBERT = BERT_CRF.InvoiceBERT(device=device,
+                                           tokenizer=tokenizerBERT,
+                                           model=underlyingModelBERT,
+                                           featureSize=inputFeatureSizeBERT,
+                                           numLabels=numLabelsBERT
+                                           )
+
+        invoiceBERT.load_state_dict(torch.load(pathToSavedVersionBERT))
+
+        if train:
+            invoiceBERT.trainModel(numEpochs=numEpochsInvoiceBERT,
+                                   dataset=trainData,
+                                   trainHistoryPath=pathToTrainingHistoryBERT,
+                                   lr=learningRateInvoiceBERT)
+
+        if test:
+            invoiceBERT.testModel(dataset=testData)
+
+        torch.save(invoiceBERT.state_dict(), pathToSavedVersionBERT)
+
+    # INITIALISE AND LOAD MODEL 2
+
+
+    subModel1(train=True,test=False)

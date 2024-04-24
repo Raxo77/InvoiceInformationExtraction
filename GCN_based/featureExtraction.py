@@ -5,9 +5,35 @@ import pandas as pd
 from PIL import Image
 import numpy as np
 import string
+import re
 
 
-def featureCalculation(wordSeq, dataInstance):
+def checkWhetherIsNumberWithDecimal(inputString: str) -> bool:
+    if "," in inputString or "." in inputString:
+        inputString.replace(",", "").replace(".", "").replace(" ", "")
+        try:
+            float(inputString)
+            return True
+        except ValueError:
+            return False
+    return False
+
+
+def checkWhetherIsRealNumer(inputString: str) -> bool:
+    fractionPattern = re.compile(r'^-?\d+/\d+$')
+
+    if fractionPattern.match(inputString):
+        return True
+
+    try:
+        float(inputString)
+        return True
+    except ValueError:
+        return False
+
+
+def featureCalculation(wordSeq, dataInstance, citiesGazetteer=pd.DataFrame([]), countryGazetteer=pd.DataFrame([]),
+                       ZIPCodesGazetteer=pd.DataFrame([])):
     nGramFeatures = []
 
     featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
@@ -33,32 +59,33 @@ def featureCalculation(wordSeq, dataInstance):
             pass
         focalFeatures[1].append(parsesAsDate)
 
-        isZipCode = 0
+        isZipCode = word in ZIPCodesGazetteer.values
         focalFeatures[1].append(isZipCode)
 
-        isKnownCity = 0
+        isKnownCity = word in citiesGazetteer.values
         focalFeatures[1].append(isKnownCity)
-        isKnownDep = 0
-        focalFeatures[1].append(isKnownDep)
-        isKnownCountry = 0
+
+        isKnownCountry = word in countryGazetteer.values
         focalFeatures[1].append(isKnownCountry)
 
-        isAlphabetic = 0
+        isAlphabetic = word.isalpha()
         focalFeatures[1].append(isAlphabetic)
-        isNumeric = 0
+
+        isNumeric = word.isnumeric()
         focalFeatures[1].append(isNumeric)
-        isAlphaNumeric = 0
+
+        isAlphaNumeric = word.isalnum()
         focalFeatures[1].append(isAlphaNumeric)
-        isNumberWithDecimal = 0
+
+        isNumberWithDecimal = checkWhetherIsNumberWithDecimal(word)
         focalFeatures[1].append(isNumberWithDecimal)
-        isRealNumber = 0
+
+        isRealNumber = checkWhetherIsRealNumer(word)
         focalFeatures[1].append(isRealNumber)
-        isCurrency = 0
+
+        currencyPattern = re.compile(r'^\$?\s?-?(\d{1,3}(,\d{3})*|\d+)(\.\d{1,2})?$')
+        isCurrency = bool(currencyPattern.match(word.strip()))
         focalFeatures[1].append(isCurrency)
-        hasRealAndCurrencySign = 0
-        focalFeatures[1].append(hasRealAndCurrencySign)
-        hasRealAndCurrencyWord = 0
-        focalFeatures[1].append(hasRealAndCurrencyWord)
 
         # Numeric features
         bottomMarginRelative = -100
