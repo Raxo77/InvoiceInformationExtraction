@@ -183,8 +183,10 @@ def logicFeatures(wordsInfo, hOCR, textualFeatures, numNGrams=4, titleThreshold=
                     # ASSUMING ONLY A LEFT TO RIGHT AND BOTTOM-DOWN CALCULATION METHOD:
                     if direction == "above":
                         result = Decimal(nGramSequence[direction][0].split("_")[0].replace(".", "").replace(",", ""))
-                        summation = sum([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in nGramSequence[direction][1:]])
-                        product = np.product([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in nGramSequence[direction][1:]])
+                        summation = sum([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in
+                                         nGramSequence[direction][1:]])
+                        product = np.product([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in
+                                              nGramSequence[direction][1:]])
 
                         if result == summation:
                             logicFeatures[nGramSequence[direction][0]]["isSum"] = True
@@ -200,8 +202,10 @@ def logicFeatures(wordsInfo, hOCR, textualFeatures, numNGrams=4, titleThreshold=
                     # direction == "above"
                     else:
                         result = Decimal(nGramSequence[direction][-1].split("_")[0].replace(".", "").replace(",", ""))
-                        summation = sum([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in nGramSequence[direction][:-1]])
-                        product = np.product([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in nGramSequence[direction][:-1]])
+                        summation = sum([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in
+                                         nGramSequence[direction][:-1]])
+                        product = np.product([Decimal(i.split("_")[0].replace(".", "").replace(",", "")) for i in
+                                              nGramSequence[direction][:-1]])
 
                         if result == summation:
                             logicFeatures[nGramSequence[direction][-1]]["isSum"] = True
@@ -228,8 +232,12 @@ def deriveFeatures(dataInstance, includePunct, save=True, vicinityThreshold=4):
     wordsInfo = []
     for word in hOCR.find_all("span", class_="ocrx_word"):
         lexem = word.get_text().replace("\n", "").replace(" ", "")
-        if lexem in string.punctuation and not includePunct:
-            continue
+        if not includePunct:
+
+            for char in string.punctuation:
+                lexem = lexem.replace(char, "")
+            if len(lexem) == 0:
+                continue
         coords = word["title"].split(";")[0].split(" ")[1:]
         coords = [int(i) for i in coords]
         wordsInfo.append((lexem, coords))
@@ -259,21 +267,15 @@ def deriveFeatures(dataInstance, includePunct, save=True, vicinityThreshold=4):
     # , layoutFeatureDict[key], patternFeatureDict[key], logicFeaturesDict[key]] for
     # key in textualFeaturesDict.keys()
     df = pd.DataFrame.from_dict(data=jointDict, orient="index")
+    df = df.reset_index().rename(columns={"index": "wordKey"})
 
     if save and includePunct:
-        df.to_csv(os.path.join(dataInstance["instanceFolderPath"], "BERT_features.csv"))
+        df.to_csv(os.path.join(dataInstance["instanceFolderPath"], "BERT_features.csv"), index=False)
     elif save and not includePunct:
-        df.to_csv(os.path.join(dataInstance["instanceFolderPath"], "BERT_features_noPunct.csv"))
+        df.to_csv(os.path.join(dataInstance["instanceFolderPath"], "BERT_features_noPunct.csv"), index=False)
 
     return df
 
-
-# def saveAsCSV(featuresDict, savePath=""):
-#    df = pd.DataFrame.from_dict(data=featuresDict, orient="index")
-#
-#    if savePath:
-#        df.to_csv(savePath)
-#    return df
 
 if __name__ == '__main__':
     from dataProcessing.customDataset import CustomDataset

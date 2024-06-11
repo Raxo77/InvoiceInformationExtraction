@@ -1,14 +1,14 @@
 import os
 import torch
-import string
 import warnings
 import pandas as pd
 from torchcrf import CRF
-# from TorchCRF import CRF
+#from TorchCRF import CRF
 from datetime import datetime
 from transformers import BertTokenizerFast, BertModel
 from dataProcessing.customDataset import CustomDataset
-from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH, flattenList
+from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH, createJSON
+from sklearn.metrics import accuracy_score, confusion_matrix
 
 torch.manual_seed(123)
 
@@ -110,7 +110,8 @@ class InvoiceBERT(torch.nn.Module):
                  tokenizer=TOKENIZER,
                  model=MODEL,
                  featureSize=2316,
-                 numLabels=10
+                 numLabels=10,
+                 batchSize=8
                  ):
         super(InvoiceBERT, self).__init__()
 
@@ -121,6 +122,7 @@ class InvoiceBERT(torch.nn.Module):
         self.inputProjection = torch.nn.Linear(featureSize, self.hiddenSize).to(device)
 
         self.tokenizer = tokenizer
+        self.batchSize = batchSize
         self.embeddingLayer = model.embeddings.to(device)
 
         self.BERTencoders = model.encoder.to(device)
@@ -316,9 +318,9 @@ class InvoiceBERT(torch.nn.Module):
     def prepareInput(self, dataInstance):
 
         featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
-        colNames = list(featuresDF.columns)
-        colNames[0] = "wordKey"
-        featuresDF.columns = colNames
+        # colNames = list(featuresDF.columns)
+        # colNames[0] = "wordKey"
+        # featuresDF.columns = colNames
 
         instanceSequence = self.getSequence(dataInstance)
         instanceTokens, instanceTokenIDdict = self.tokenizeSequence(instanceSequence)
@@ -356,53 +358,203 @@ class InvoiceBERT(torch.nn.Module):
                         tokenLabels[currentTokenIdx] = labelTranslation[key]
         return torch.tensor([tokenLabels])
 
-    def forward(self, inputTensor, labels=None):
+    def forward(self, inputTensor, labels=None, attentionMask=None):
 
+        # dim of inputTensor (batchSize, seqLen, originalFeatureLen (2316))
         inputTensor = inputTensor.to(self.device)
+        #
+        # dim of projected input (batchSize, seqLen, projectedFeatureLen (768))
         projectedInput = self.inputProjection(inputTensor)
 
-        outputsAll = self.BERTencoders(projectedInput)
+        # dim of attention mask here (batchSize, 1, seqLen, seqLen)
+        outputsAll = self.BERTencoders(projectedInput, attention_mask=attentionMask)
         outputs = outputsAll.last_hidden_state
+
         emissions = self.classifier(outputs)
 
         if labels is not None:
             labels = labels.to(self.device)
-            loss = -self.crf.forward(emissions, labels, reduction="mean")
+            # dim of attention mask here (batchSize, seqLen)
+            attentionMask = attentionMask[:, 0, 0, :]
+            loss = -self.crf.forward(emissions, labels, reduction="mean", mask=attentionMask.bool())
             tags = self.crf.decode(emissions)
             return loss, tags
         else:
             return self.crf.decode(emissions)
 
-    def trainModel(self, numEpochs, dataset, trainHistoryPath="", lr=1e-3):
+    def trainModel(self,
+                   numEpochs,
+                   dataset,
+                   trainHistoryPath="",
+                   lr=1e-3):
 
         if trainHistoryPath:
             trainHistory = pd.read_csv(trainHistoryPath)
 
+        try:
+            epochData = pd.read_csv("./trainEpochData.csv")
+        except FileNotFoundError:
+            epochData = pd.DataFrame(columns=['epoch', 'avgLoss'])
+
+        try:
+            batchData = loadJSON(f"./batchData.json")
+        except FileNotFoundError:
+            batchData = {}
+
         self.train()
+
         optimizer = torch.optim.Adam(self.parameters(), lr=lr)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=.1)
 
-        epochData = pd.DataFrame(columns=['epoch', 'avgLoss'])
-        batchData = pd.DataFrame(columns=['epoch', 'invoiceInstance', "predictions", "goldLabels", 'loss'])
-
+        # outermost loop - handles number of epochs
         for epoch in range(numEpochs):
             print(f"Epoch {epoch + 1} / {numEpochs}")
 
             overallEpochLoss = 0
             shuffledIndices = torch.randperm(len(dataset))
 
-            for i in range(len(dataset)):
-                # if i == (len(dataset) // 10):
-                #   print(f"current data index: {i}")
+            batchSize = self.batchSize
 
-                dataInstance = dataset[shuffledIndices[i]]
-                pathToInstance = dataInstance["instanceFolderPath"]
-                print(i, pathToInstance)
-                if trainHistoryPath and f"{pathToInstance}_{epoch}" in trainHistory.values:
+            # intermediate loop - handles batches
+            for i in range(batchSize, len(dataset), batchSize):
+
+                # Notably, with this approach the last batch per epoch is omitted
+                # --> as long as batch size is small in relation to len(dataset), this is inconsequential,
+                # with considerable batch sizes though, this needs to be considered/adjusted
+
+                batchDataIndex = f"{epoch}_{i}"
+                batchData[batchDataIndex] = {"batchLoss": 0,
+                                             "batchItems": [],
+                                             "goldLabels": [],
+                                             "predictions": []
+                                             }
+
+                allInstances = shuffledIndices[i - batchSize:i]
+                preparedInputList = []
+                labelsList = []
+                attentionMaskList = []
+
+                # innermost loop - respectively handles concrete instances in each batch
+                for batchNum, idx in enumerate(allInstances):
+
+                    dataInstance = dataset[idx]
+
+                    pathToInstance = dataInstance["instanceFolderPath"]
+                    batchData[batchDataIndex]["batchItems"].append(pathToInstance.split("\\")[-1])
+
+                    print(i, batchNum, pathToInstance)
+                    itemNum = pathToInstance.split("\\")[-1]
+
+                    if trainHistoryPath and f"{itemNum}_{epoch}" in trainHistory.values:
+                        continue
+
+                    if trainHistoryPath:
+                        trainHistory.loc[len(trainHistory)] = f"{itemNum}_{epoch}"
+
+                    preparedInput = self.prepareInput(dataInstance)
+                    preparedInput = preparedInput.type(dtype=torch.float32)
+
+                    instanceSequence = self.getSequence(dataInstance)
+                    instanceTokens, instanceTokensDict = self.tokenizeSequence(instanceSequence)
+                    labels = self.labelTokens(instanceTokens,
+                                              getGoldData(
+                                                  os.path.join(dataInstance["instanceFolderPath"], "goldLabels.json"))
+                                              )
+                    preparedInputList.append(preparedInput[0])
+                    labelsList.append(labels[0])
+
+                    batchData[batchDataIndex]["goldLabels"].append(labels[0].tolist())
+
+                    attentionMaskList.append(torch.ones((1, preparedInput.size(1))))
+
+                # end of innermost loop - i.e. pre-processing for all invoices of resp. batch complete
+
+                if not preparedInputList:
+                    print("skipped")
                     continue
 
+                maxBatchLength = max(t.size(0) for t in preparedInputList)
+
+                preparedInputList = torch.stack([torch.nn.functional.pad(t,
+                                                                         (0,
+                                                                          0,
+                                                                          0,
+                                                                          maxBatchLength - t.size(0))
+                                                                         ) for t in preparedInputList],
+                                                dim=0)
+
+                labelsList = torch.stack([torch.nn.functional.pad(t,
+                                                                  (0,
+                                                                   maxBatchLength - t.size(0))
+                                                                  ) for t in labelsList],
+                                         dim=0)
+
+                attentionMask = torch.stack([torch.nn.functional.pad(t,
+                                                                     (0,
+                                                                      maxBatchLength - t.size(1))
+                                                                     ) for t in attentionMaskList],
+                                            dim=0)
+
+                attentionMask = attentionMask.unsqueeze(-1).repeat(1, 1, 1, attentionMask.size(-1)).to(self.device)
+
+                self.zero_grad()
+                loss, tags = self.forward(preparedInputList, labelsList, attentionMask=attentionMask)
+
+                for c, j in enumerate(batchData[batchDataIndex]["goldLabels"]):
+                    batchData[batchDataIndex]["predictions"].append(tags[c][:len(j)])
+
+                overallEpochLoss += loss.item()
+                batchData[batchDataIndex]["batchLoss"] = loss.item()
+
+                loss.backward()
+                optimizer.step()
+
+            # end of intermediate loop - respective epoch complete
+
+            createJSON(f"./batchData.json", batchData)
+
+            if trainHistoryPath:
+                trainHistory.to_csv(trainHistoryPath, index=False)
+
+            # after each epoch, save current state dict as checkpoint
+            time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+            checkpointPath = getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"][:-3] + f"{epoch}_"
+            checkpointPath += time
+            checkpointPath += ".pt"
+            torch.save(self.state_dict(), checkpointPath)
+
+            overallEpochLoss = overallEpochLoss / ((len(dataset) // self.batchSize) * self.batchSize)
+            epochData = epochData.append({'epoch': epoch + 1, 'avgLoss': overallEpochLoss}, ignore_index=True)
+            scheduler.step()
+
+            epochData.to_csv(f"./trainEpochData_06-06.csv", index=False)
+
+        torch.save(self.state_dict(), getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"])
+        print("Training of BERT-CRF complete")
+
+    def testModel(self,
+                  dataset
+                  ):
+
+        testResults = {}
+        self.eval()
+
+        with torch.no_grad():
+            overallAcc = 0
+            overallLoss = 0
+
+            for c, idx in enumerate(range(len(dataset))):
+                dataInstance = dataset[idx]
+                pathToInstance = dataInstance["instanceFolderPath"]
+
+                print(c, pathToInstance)
+
+                itemNum = pathToInstance.split("\\")[-1]
+                testResults[itemNum] = {}
+
                 preparedInput = self.prepareInput(dataInstance)
-                preparedInput = preparedInput.type(dtype=torch.float32)
+                preparedInput = preparedInput.type(dtype=torch.float32)[0]
+                preparedInput = preparedInput[None, :, :]
 
                 instanceSequence = self.getSequence(dataInstance)
                 instanceTokens, instanceTokensDict = self.tokenizeSequence(instanceSequence)
@@ -410,37 +562,42 @@ class InvoiceBERT(torch.nn.Module):
                                           getGoldData(
                                               os.path.join(dataInstance["instanceFolderPath"], "goldLabels.json"))
                                           )
+                labels = labels.to(self.device)
 
-                self.zero_grad()
-                loss, tags = self.forward(preparedInput, labels)
-                batchData = batchData.append(
-                    {'epoch': epoch + 1, 'invoiceInstance': pathToInstance.split("\\")[-2:], "predictions": tags,
-                     "goldLabels": labels.tolist(), 'loss': loss.item()}, ignore_index=True)
+                attentionMask = torch.ones((1, preparedInput.size(1)))
+                attentionMask = attentionMask.unsqueeze(-1).repeat(1, 1, 1, attentionMask.size(-1)).to(self.device)
 
-                loss.backward()
-                optimizer.step()
+                loss, predictions = self.forward(preparedInput, labels, attentionMask=attentionMask)
+                overallLoss += loss.item()
 
-                overallEpochLoss += loss.item()
+                testResults[itemNum]["instanceTokens"] = instanceTokens
+                testResults[itemNum]["goldLabels"] = labels[0].tolist()
+                testResults[itemNum]["predictions"] = predictions[0]
+                testResults[itemNum]["loss"] = loss.item()
+                testResults[itemNum]["NumberOfNonZeroLabelsPredicted"] = sum(
+                    list(map(lambda x: 1 if x != 0 else 0, predictions[0])))
+                testResults[itemNum]["NumberOfNonZeroLabelsGold"] = sum(
+                    list(map(lambda x: 1 if x != 0 else 0, labels[0].tolist())))
 
-                if trainHistoryPath:
-                    trainHistory.loc[len(trainHistory)] = f"{pathToInstance}_{epoch}"
+                testResults[itemNum]["accuracy"] = accuracy_score(labels[0].tolist(),
+                                                                  predictions[0])
 
-            overallEpochLoss = overallEpochLoss / len(dataset)
-            print(f"Avg. loss for epoch {epoch + 1}: {overallEpochLoss}")
-            epochData = epochData.append({'epoch': epoch + 1, 'avgLoss': overallEpochLoss}, ignore_index=True)
+                overallAcc += testResults[itemNum]["accuracy"]
 
-            scheduler.step()
+                testResults[itemNum]["confusionMatrix"] = confusion_matrix(
+                    labels[0].tolist(),
+                    predictions[0]).tolist()
 
         time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
-        epochData.to_csv(f"./trainEpochData_{time}.csv")
-        batchData.to_csv(f"./trainBatchData_{time}.csv")
+        createJSON(f"F:\\CodeCopy\\InvoiceInformationExtraction\\BERT_based\\testResults_{time}.json", testResults)
+        print("Average Test Loss: {}".format(overallLoss / len(dataset)))
+        print("Average Test Accuracy: {}".format(overallAcc / len(dataset)))
+        print("-" * 100)
+        print("Testing of BERT_CRF complete")
 
-        if trainHistoryPath:
-            trainHistory.to_csv(trainHistoryPath, index=False)
+        return testResults
 
-        print("Training of BERT-CRF complete")
-
-    def testModel(self, dataset):
+    def testModel2(self, dataset):
         testResults = pd.DataFrame(columns=['invoiceInstance', 'prediction', "goldLabels", "instanceLoss"])
         self.eval()
 
@@ -448,6 +605,7 @@ class InvoiceBERT(torch.nn.Module):
             for i in range(len(dataset)):
                 dataInstance = dataset[i]
                 pathToInstance = dataInstance["instanceFolderPath"]
+                print(f"{i} {pathToInstance}")
                 preparedInput = self.prepareInput(dataInstance)
                 preparedInput = preparedInput.type(dtype=torch.float32)
 
@@ -472,17 +630,16 @@ class InvoiceBERT(torch.nn.Module):
 
 
 if __name__ == "__main__":
-    #    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    #   print(device)
+    """
+    Model info:
+    
+    - number of parameters: 110_097_538
+    - time to train for 81 items with batchSize=8 on Dekstop and 2 epochs: 
+    """
 
     data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
+
     invoiceBERT = InvoiceBERT()
 
-    torch.save(invoiceBERT.state_dict(), getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"])
-
-    # invoiceBERT.load_state_dict(torch.load(getConfig("BERT_based", CONFIG_PATH)["pathToStateDict"]))
-
-    # invoiceBERT.trainModel(2, data,
-    #                       trainHistoryPath=r"C:\Users\fabia\InvoiceInformationExtraction\BERT_based\trainHistory.csv")
-    # invoiceBERT.trainModel(3, data)
-    # invoiceBERT.testModel(data)
+    # invoiceBERT.trainModel(2, data, trainHistoryPath=getConfig("BERT_based", CONFIG_PATH)["pathToTrainingHistory"])
+    invoiceBERT.testModel(data)
