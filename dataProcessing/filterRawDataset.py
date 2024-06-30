@@ -1,4 +1,6 @@
 import os
+import sys
+from pathlib import Path
 from utils.helperFunctions import getConfig, separate, loadJSON, createJSON, CONFIG_PATH
 
 """"
@@ -123,7 +125,3 @@ def getGoldLabels(pathToJSON: str, targets: dict, dirPath: str = "") -> dict:
         createJSON(f"{dirPath}\\goldLabels.json", goldLabels)
 
     return goldLabels
-
-
-if __name__ == '__main__':
-    pass

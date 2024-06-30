@@ -1,11 +1,11 @@
-from utils.helperFunctions import getConfig, loadJSON, CONFIG_PATH
-from dataProcessing.filterRawDataset import listDirectory
-from pdf2image import convert_from_path
-from PIL import Image, ImageStat
+import os
 import pytesseract
 import Levenshtein
 from bs4 import BeautifulSoup
-import os
+from PIL import Image, ImageStat
+from pdf2image import convert_from_path
+from dataProcessing.filterRawDataset import listDirectory
+from utils.helperFunctions import getConfig, loadJSON, CONFIG_PATH
 
 CONFIG = CONFIG_PATH
 GROUND_TRUTH_FILE_NAME = getConfig("groundTruthFileName", CONFIG)
@@ -65,7 +65,6 @@ def OCRengine(imageList: list, saveResultsPath="", groundTruthPath=""):
 
     if groundTruthPath:
         temp = compareOCRwithGroundTruth(hOCR_xml, groundTruthPath)
-        print(temp)
         return hOCR_xml, temp
 
     else:
@@ -73,20 +72,20 @@ def OCRengine(imageList: list, saveResultsPath="", groundTruthPath=""):
 
 
 def compareOCRwithGroundTruth(hOCR_output, groundTruthPath):
+    """
+    Calculate similarity of OCRed words with ground truth text via Levenshtein distance;
+    Respective strings are first sorted alphabetically to neutralise the potentially
+    different order in which words are extracted/stored;
+    Also replace whitespaces to neutralise any differences that might occur due to
+    different tokenization of OCR output and ground truth text
+    """
+
     parsedOutput = BeautifulSoup(hOCR_output, features="lxml")
     words = parsedOutput.find_all("span", attrs="ocrx_word")
-    words = "".join(word.get_text() for word in words)
+    words = "".join(sorted(word.get_text() for word in words))
 
     groundTruthText = loadJSON(groundTruthPath)
-    groundTruthText = "".join(i["text"] for i in groundTruthText)
-
-#    missingCount = [0., []]
-#    temp = groundTruthText.split()
-#    temp = [i.replace(",", "") for i in temp]
-#    for word in words.split():
-#        if word.replace(",", "") not in temp:
-#            missingCount[0] += 1
-#            missingCount[1].append(word)
+    groundTruthText = "".join(sorted(i["text"] for i in groundTruthText))
 
     distance = Levenshtein.distance(words, groundTruthText)
     similarity = 1 - distance / max(len(words), len(groundTruthText))
@@ -109,5 +108,3 @@ def runForAll(imageIsBlankThreshold=IMAGE_IS_BLANK_THRESHOLD):
         else:
             print(directory.name)
 
-# imgList = convertPDFtoImage(r"C:\Users\fabia\Downloads\test.pdf")
-# OCRengine(imgList)

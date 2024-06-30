@@ -1,14 +1,14 @@
-import pandas as pd
-from torch.utils.data import Dataset
 import os
-from bs4 import BeautifulSoup
-from dataProcessing.filterRawDataset import listDirectory
-from utils.helperFunctions import getConfig, loadJSON, CONFIG_PATH
-import dataProcessing.OCR as OCR
-import TemplateDetection.templateDetection as TemplateDetection
-from dataProcessing.filterRawDataset import getGoldLabels
 import warnings
+import pandas as pd
+from bs4 import BeautifulSoup
+import dataProcessing.OCR as OCR
+from torch.utils.data import Dataset
 from PIL import Image, ImageDraw, ImageFont
+from dataProcessing.filterRawDataset import getGoldLabels
+from dataProcessing.filterRawDataset import listDirectory
+import TemplateDetection.templateDetection as TemplateDetection
+from utils.helperFunctions import getConfig, loadJSON, CONFIG_PATH
 import BERT_based.featureExtraction as BERTbased_featureExtraction
 
 warnings.filterwarnings("ignore", category=UserWarning, message=".*It looks like you're parsing an XML document.*")
@@ -54,13 +54,15 @@ class CustomDataset(Dataset):
             if len(pdfFile) == 1:
                 pdfFile = pdfFile[0]
                 imageList = OCR.convertPDFtoImage(pdfFile.path, getConfig("imageIsBlankThreshold", CONFIG_PATH))
-                hOCR = OCR.OCRengine(imageList,
-                                     saveResultsPath=f"{instanceFolderPath}\\hOCR_output.xml")[0]
+                hOCR, similarity = OCR.OCRengine(imageList,
+                                                 saveResultsPath=f"{instanceFolderPath}\\hOCR_output.xml",
+                                                 groundTruthPath=f"{instanceFolderPath}\\ground_truth_words.json")
+                pd.DataFrame(data={"similarity": [similarity]}).to_csv(
+                    f"{instanceFolderPath}\\hOCR_groundWords_similarity.csv")
         data["hOCR"] = BeautifulSoup(hOCR, features="lxml")
 
         # Get wordpos features and load into data dict
         try:
-            #print(f"{instanceFolderPath}\\wordposFeatures.json")
             wordposFeatures = loadJSON(f"{instanceFolderPath}\\wordposFeatures.json")
         except FileNotFoundError:
             wordposFeatures = TemplateDetection.wordposFeatures(data)
@@ -121,20 +123,9 @@ class CustomDataset(Dataset):
                     x2 = x1 + width
                     y2 = y1 + height
                     draw.rectangle([x1, y1, x2, y2], outline='gold', width=3)
-                    draw.text((x1, y1 - 32), label, fill="black", font=ImageFont.truetype("arial.ttf", 32))
+                    draw.text((x1, y1 - 32), label, fill="darkred", font=ImageFont.truetype("arial.ttf", 32))
 
         if saveImage:
             image.save(os.path.join(dataInstance["instanceFolderPath"], "boundingBoxImage.png"))
 
         image.show()
-
-
-if __name__ == '__main__':
-    data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
-    print(data[0])
-    data.plotInstance(0)
-# print(data.__getitem__(2))
-
-# data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
-# data.__getitem__(0)
-# print(data.__getitem__(0))
