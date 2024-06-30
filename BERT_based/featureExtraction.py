@@ -1,12 +1,12 @@
+import os
+import re
 import math
 import string
-from PIL import Image
-from utils.helperFunctions import getConfig, CONFIG_PATH
 import numpy as np
-import re
 import pandas as pd
-import os
+from PIL import Image
 from decimal import Decimal
+from utils.helperFunctions import getConfig, CONFIG_PATH
 
 
 def textualFeatures(wordsInfo, vicinityThreshold=4):
@@ -275,15 +275,3 @@ def deriveFeatures(dataInstance, includePunct, save=True, vicinityThreshold=4):
         df.to_csv(os.path.join(dataInstance["instanceFolderPath"], "BERT_features_noPunct.csv"), index=False)
 
     return df
-
-
-if __name__ == '__main__':
-    from dataProcessing.customDataset import CustomDataset
-
-    data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
-    # saveAsCSV(deriveFeatures(data.__getitem__(2)),
-    #          os.path.join(data.__getitem__(2)["instanceFolderPath"], r"BERT_features_noPunct.csv"))
-    # a = saveAsCSV(deriveFeatures(data.__getitem__(0)))
-    # for j in range(1):
-    #     for i in (deriveFeatures(data.__getitem__(j))).items():
-    #         print(i)

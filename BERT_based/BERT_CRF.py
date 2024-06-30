@@ -3,12 +3,12 @@ import torch
 import warnings
 import pandas as pd
 from torchcrf import CRF
-#from TorchCRF import CRF
+# from TorchCRF import CRF
 from datetime import datetime
 from transformers import BertTokenizerFast, BertModel
 from dataProcessing.customDataset import CustomDataset
-from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH, createJSON
 from sklearn.metrics import accuracy_score, confusion_matrix
+from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH, createJSON
 
 torch.manual_seed(123)
 
@@ -132,7 +132,9 @@ class InvoiceBERT(torch.nn.Module):
         self.crf = CRF(numLabels, batch_first=True).to(device)
 
     def getSequence(self, dataInstance):
-
+        """
+        Get the raw text sequence of an invoice document based on the OCR output
+        """
         featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
         colNames = list(featuresDF.columns)
         colNames[0] = "wordKey"
@@ -148,7 +150,7 @@ class InvoiceBERT(torch.nn.Module):
             if i in ['.', ',', '?', '!']:
                 seqString += i
             else:
-                seqString += f" {i}"
+                seqString += f" {i}"  # if i is no punctuation char, append word with a whitespace
 
         return seqString
 
@@ -166,7 +168,6 @@ class InvoiceBERT(torch.nn.Module):
 
     def embedSequence(self, tokens, tokenIDtensor):
         """
-
         :param tokens: list of the natural language version of the tokens
         :param tokenIDtensor: tensor containing the token IDs (i.e., the output of the tokenizer)
         :return: tuple of the tensor of the token embeddings and a dict mapping tokens to their respective embedding
@@ -318,9 +319,6 @@ class InvoiceBERT(torch.nn.Module):
     def prepareInput(self, dataInstance):
 
         featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
-        # colNames = list(featuresDF.columns)
-        # colNames[0] = "wordKey"
-        # featuresDF.columns = colNames
 
         instanceSequence = self.getSequence(dataInstance)
         instanceTokens, instanceTokenIDdict = self.tokenizeSequence(instanceSequence)
@@ -374,7 +372,6 @@ class InvoiceBERT(torch.nn.Module):
 
         if labels is not None:
             labels = labels.to(self.device)
-            # dim of attention mask here (batchSize, seqLen)
             attentionMask = attentionMask[:, 0, 0, :]
             loss = -self.crf.forward(emissions, labels, reduction="mean", mask=attentionMask.bool())
             tags = self.crf.decode(emissions)
@@ -597,49 +594,11 @@ class InvoiceBERT(torch.nn.Module):
 
         return testResults
 
-    def testModel2(self, dataset):
-        testResults = pd.DataFrame(columns=['invoiceInstance', 'prediction', "goldLabels", "instanceLoss"])
-        self.eval()
 
-        with torch.no_grad():
-            for i in range(len(dataset)):
-                dataInstance = dataset[i]
-                pathToInstance = dataInstance["instanceFolderPath"]
-                print(f"{i} {pathToInstance}")
-                preparedInput = self.prepareInput(dataInstance)
-                preparedInput = preparedInput.type(dtype=torch.float32)
-
-                instanceSequence = self.getSequence(dataInstance)
-                instanceTokens, instanceTokensDict = self.tokenizeSequence(instanceSequence)
-                labels = self.labelTokens(instanceTokens,
-                                          getGoldData(
-                                              os.path.join(dataInstance["instanceFolderPath"], "goldLabels.json"))
-                                          )
-
-                loss, tags = self.forward(preparedInput, labels)
-                testResults = testResults.append(
-                    {'invoiceInstance': pathToInstance.split("\\")[-2:], 'prediction': tags,
-                     "goldLabels": labels.tolist(),
-                     "instanceLoss": loss.item()}, ignore_index=True)
-
-        time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
-        testResults.to_csv(f"./testResults_{time}.csv")
-
-        print("Testing of BERT-CRF complete")
-        return testResults
-
-
-if __name__ == "__main__":
     """
     Model info:
     
     - number of parameters: 110_097_538
-    - time to train for 81 items with batchSize=8 on Dekstop and 2 epochs: 
+    - time to train for 2,000 items with batchSize=8 per epoch:
+        ~ 250 minutes 
     """
-
-    data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
-
-    invoiceBERT = InvoiceBERT()
-
-    # invoiceBERT.trainModel(2, data, trainHistoryPath=getConfig("BERT_based", CONFIG_PATH)["pathToTrainingHistory"])
-    invoiceBERT.testModel(data)
