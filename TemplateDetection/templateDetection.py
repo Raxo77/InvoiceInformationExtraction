@@ -1,9 +1,10 @@
-import Levenshtein
-from utils.helperFunctions import getConfig, createJSON, CONFIG_PATH
-from PIL import Image
-import numpy as np
 import re
+import math
+import numpy as np
+import Levenshtein
+from PIL import Image
 import matplotlib.pyplot as plt
+from utils.helperFunctions import getConfig, createJSON, CONFIG_PATH
 
 CONFIG = CONFIG_PATH
 
@@ -13,10 +14,10 @@ def wordposFeatures(dataInstance, save=True):
     pathToInstance = dataInstance["instanceFolderPath"]
     cols, rows = getConfig("gridSize", CONFIG)
 
-    # NOTE: currently works only for one-paged invoices
     imageHeight, imageWidth = re.search(r'bbox (\d+) (\d+) (\d+) (\d+)',
                                         str(text.find_all("div", class_="ocr_page")[0])).groups()[2:4]
-    imageHeight, imageWidth = int(imageHeight), int(imageWidth)
+    imageWidth, imageHeight = int(imageHeight), int(imageWidth)
+
     gridHeight = imageHeight // rows
     gridWidth = imageWidth // cols
 
@@ -31,41 +32,8 @@ def wordposFeatures(dataInstance, save=True):
         wordPosList.append(wordPos)
 
     if save:
-        # TODO: add name to dict
         createJSON(f"{pathToInstance}\\wordposFeatures.json", {"wordposFeatures": wordPosList})
     return wordPosList
-
-
-# OBSOLETE
-# def wordposFeaturesOLD(invoicePNGPath):
-#     image = Image.open(invoicePNGPath)
-#
-#     # x from left to right; y from top to bottom
-#     cols, rows = getConfig("gridSize", CONFIG)
-#     imgWidth, imgHeight = image.size
-#     gridWidth = imgWidth // cols
-#     gridHeight = imgHeight // rows
-#
-#     gridText = []
-#     for row in range(rows):
-#         print(f"Processing row {row + 1}")
-#         for col in range(cols):
-#             leftX = gridWidth * col
-#             leftY = gridHeight * row
-#             rightX = gridWidth * (col + 1)
-#             rightY = gridHeight * (row + 1)
-#             croppedImg = image.crop((leftX, leftY, rightX, rightY))
-#
-#             textCrop = pytesseract.image_to_string(croppedImg)
-#             textCrop = (textCrop.replace("\n", " ").split(" "))
-#             textCrop = [text for text in textCrop if len(text) > 0]
-#             textCrop = " ".join([f"{text}_{row}_{col}" for text in textCrop])
-#             gridText.append(textCrop)
-#
-#     return " ".join(gridText)
-
-# get OCR words per grid and concatenate name with x,y of grid
-# store somewhere (?)
 
 
 def zonesegFeatures(dataInstance, threshold=.1, save=True):
@@ -100,14 +68,23 @@ def zonesegFeatures(dataInstance, threshold=.1, save=True):
 
     gridLabelJoint = "".join([str(i) for i in gridLabel])
     if save:
-        # TODO: add name to dict
         createJSON(f"{pathToInstance}\\zonesegFeatures.json", {"zonesegFeatures": gridLabelJoint})
 
     return gridLabelJoint, sum(gridLabel), len(gridLabel)
 
 
 def zonesegSimilarity(zoneseg1, zoneseg2):
-    return Levenshtein.distance(zoneseg1, zoneseg2)
+    count = 0
+    for i, j in zip(list(zoneseg1), list(zoneseg2)):
+        if i != j:
+            count += 1
+        else:
+            count += 0
+    return -math.sqrt(count)
+
+
+def wordposSimilarity(wordpos1, wordpos2):
+    return -Levenshtein.distance(wordpos1, wordpos2)
 
 
 def plotGrid(dataInstance):
@@ -127,9 +104,3 @@ def plotGrid(dataInstance):
 
     plt.show()
 
-
-# data = CustomDataset(getConfig("pathToDataFolder", CONFIG))
-# print(wordposFeatures(data.__getitem__(0)))
-# print(zonesegFeatures(data.__getitem__(0)))
-# print(zonesegSimilarity(zonesegFeatures(data.__getitem__(0))[0],zonesegFeatures(data.__getitem__(1))[0]))
-# plotGrid(data.__getitem__(0))
