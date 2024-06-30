@@ -1,0 +1,562 @@
+[
+    {
+        "text": "INVOICE",
+        "top": 166,
+        "left": 278,
+        "height": 159,
+        "width": 505
+    },
+    {
+        "text": "Invoice",
+        "top": 355,
+        "left": 278,
+        "height": 29,
+        "width": 73
+    },
+    {
+        "text": "number",
+        "top": 355,
+        "left": 357,
+        "height": 29,
+        "width": 80
+    },
+    {
+        "text": "#270572",
+        "top": 385,
+        "left": 278,
+        "height": 29,
+        "width": 84
+    },
+    {
+        "text": "Billed",
+        "top": 475,
+        "left": 278,
+        "height": 29,
+        "width": 55
+    },
+    {
+        "text": "to",
+        "top": 475,
+        "left": 339,
+        "height": 29,
+        "width": 21
+    },
+    {
+        "text": "Terri",
+        "top": 503,
+        "left": 278,
+        "height": 29,
+        "width": 51
+    },
+    {
+        "text": "Clark",
+        "top": 503,
+        "left": 334,
+        "height": 29,
+        "width": 55
+    },
+    {
+        "text": "3221",
+        "top": 531,
+        "left": 278,
+        "height": 29,
+        "width": 48
+    },
+    {
+        "text": "Sanchez",
+        "top": 531,
+        "left": 332,
+        "height": 29,
+        "width": 83
+    },
+    {
+        "text": "Underpass",
+        "top": 531,
+        "left": 423,
+        "height": 29,
+        "width": 106
+    },
+    {
+        "text": "Woodardport,",
+        "top": 560,
+        "left": 278,
+        "height": 29,
+        "width": 140
+    },
+    {
+        "text": "AL",
+        "top": 560,
+        "left": 425,
+        "height": 29,
+        "width": 30
+    },
+    {
+        "text": "94182",
+        "top": 560,
+        "left": 461,
+        "height": 29,
+        "width": 60
+    },
+    {
+        "text": "94182",
+        "top": 588,
+        "left": 278,
+        "height": 29,
+        "width": 60
+    },
+    {
+        "text": "Date",
+        "top": 343,
+        "left": 583,
+        "height": 29,
+        "width": 47
+    },
+    {
+        "text": "of",
+        "top": 343,
+        "left": 636,
+        "height": 29,
+        "width": 19
+    },
+    {
+        "text": "issue",
+        "top": 343,
+        "left": 662,
+        "height": 29,
+        "width": 51
+    },
+    {
+        "text": "21",
+        "top": 375,
+        "left": 583,
+        "height": 29,
+        "width": 24
+    },
+    {
+        "text": "Sep,",
+        "top": 375,
+        "left": 614,
+        "height": 29,
+        "width": 39
+    },
+    {
+        "text": "1999",
+        "top": 375,
+        "left": 660,
+        "height": 29,
+        "width": 48
+    },
+    {
+        "text": "Donovan,",
+        "top": 463,
+        "left": 583,
+        "height": 29,
+        "width": 98
+    },
+    {
+        "text": "James",
+        "top": 463,
+        "left": 688,
+        "height": 29,
+        "width": 60
+    },
+    {
+        "text": "and",
+        "top": 463,
+        "left": 754,
+        "height": 29,
+        "width": 39
+    },
+    {
+        "text": "Barron",
+        "top": 463,
+        "left": 798,
+        "height": 29,
+        "width": 71
+    },
+    {
+        "text": "3325",
+        "top": 491,
+        "left": 583,
+        "height": 29,
+        "width": 48
+    },
+    {
+        "text": "Salas",
+        "top": 491,
+        "left": 638,
+        "height": 29,
+        "width": 52
+    },
+    {
+        "text": "Springs",
+        "top": 491,
+        "left": 696,
+        "height": 29,
+        "width": 76
+    },
+    {
+        "text": "Apt.",
+        "top": 491,
+        "left": 778,
+        "height": 29,
+        "width": 41
+    },
+    {
+        "text": "669",
+        "top": 491,
+        "left": 826,
+        "height": 29,
+        "width": 36
+    },
+    {
+        "text": "Jamesbury,",
+        "top": 519,
+        "left": 583,
+        "height": 29,
+        "width": 112
+    },
+    {
+        "text": "OK",
+        "top": 519,
+        "left": 702,
+        "height": 29,
+        "width": 31
+    },
+    {
+        "text": "57993",
+        "top": 519,
+        "left": 740,
+        "height": 29,
+        "width": 60
+    },
+    {
+        "text": "(717)576-8107",
+        "top": 546,
+        "left": 583,
+        "height": 29,
+        "width": 143
+    },
+    {
+        "text": "ytaylor@hurley.com",
+        "top": 574,
+        "left": 583,
+        "height": 29,
+        "width": 204
+    },
+    {
+        "text": "gray.org",
+        "top": 604,
+        "left": 583,
+        "height": 29,
+        "width": 84
+    },
+    {
+        "text": "Description",
+        "top": 724,
+        "left": 278,
+        "height": 29,
+        "width": 113
+    },
+    {
+        "text": "Daisy",
+        "top": 855,
+        "left": 278,
+        "height": 29,
+        "width": 56
+    },
+    {
+        "text": "Garden",
+        "top": 855,
+        "left": 340,
+        "height": 29,
+        "width": 73
+    },
+    {
+        "text": "Marker",
+        "top": 855,
+        "left": 421,
+        "height": 29,
+        "width": 74
+    },
+    {
+        "text": "Plasters",
+        "top": 913,
+        "left": 278,
+        "height": 29,
+        "width": 80
+    },
+    {
+        "text": "In",
+        "top": 913,
+        "left": 364,
+        "height": 29,
+        "width": 21
+    },
+    {
+        "text": "Tin",
+        "top": 913,
+        "left": 393,
+        "height": 29,
+        "width": 33
+    },
+    {
+        "text": "Woodland",
+        "top": 913,
+        "left": 433,
+        "height": 29,
+        "width": 103
+    },
+    {
+        "text": "Animals",
+        "top": 913,
+        "left": 541,
+        "height": 29,
+        "width": 84
+    },
+    {
+        "text": "6",
+        "top": 971,
+        "left": 278,
+        "height": 29,
+        "width": 12
+    },
+    {
+        "text": "Ribbons",
+        "top": 971,
+        "left": 296,
+        "height": 29,
+        "width": 80
+    },
+    {
+        "text": "Rustic",
+        "top": 971,
+        "left": 383,
+        "height": 29,
+        "width": 63
+    },
+    {
+        "text": "Charm",
+        "top": 971,
+        "left": 451,
+        "height": 29,
+        "width": 70
+    },
+    {
+        "text": "Terms",
+        "top": 1782,
+        "left": 278,
+        "height": 29,
+        "width": 64
+    },
+    {
+        "text": "Cash",
+        "top": 1812,
+        "left": 278,
+        "height": 29,
+        "width": 49
+    },
+    {
+        "text": "next",
+        "top": 1812,
+        "left": 334,
+        "height": 29,
+        "width": 44
+    },
+    {
+        "text": "delivery",
+        "top": 1812,
+        "left": 385,
+        "height": 29,
+        "width": 78
+    },
+    {
+        "text": "Unit",
+        "top": 724,
+        "left": 898,
+        "height": 29,
+        "width": 44
+    },
+    {
+        "text": "cost",
+        "top": 724,
+        "left": 948,
+        "height": 29,
+        "width": 40
+    },
+    {
+        "text": "1.25",
+        "top": 855,
+        "left": 946,
+        "height": 29,
+        "width": 42
+    },
+    {
+        "text": "1.65",
+        "top": 913,
+        "left": 946,
+        "height": 29,
+        "width": 42
+    },
+    {
+        "text": "1.45",
+        "top": 971,
+        "left": 946,
+        "height": 29,
+        "width": 42
+    },
+    {
+        "text": "1",
+        "top": 855,
+        "left": 1165,
+        "height": 29,
+        "width": 12
+    },
+    {
+        "text": "6",
+        "top": 913,
+        "left": 1165,
+        "height": 29,
+        "width": 12
+    },
+    {
+        "text": "1",
+        "top": 971,
+        "left": 1165,
+        "height": 29,
+        "width": 12
+    },
+    {
+        "text": "Subtotal",
+        "top": 1342,
+        "left": 1093,
+        "height": 29,
+        "width": 85
+    },
+    {
+        "text": "Discount",
+        "top": 1397,
+        "left": 1087,
+        "height": 29,
+        "width": 90
+    },
+    {
+        "text": "(Tax",
+        "top": 1451,
+        "left": 1077,
+        "height": 29,
+        "width": 46
+    },
+    {
+        "text": "rate)",
+        "top": 1451,
+        "left": 1129,
+        "height": 29,
+        "width": 47
+    },
+    {
+        "text": "Tax",
+        "top": 1505,
+        "left": 1139,
+        "height": 29,
+        "width": 38
+    },
+    {
+        "text": "Qty/HR",
+        "top": 724,
+        "left": 1103,
+        "height": 29,
+        "width": 75
+    },
+    {
+        "text": "rate",
+        "top": 754,
+        "left": 1137,
+        "height": 29,
+        "width": 41
+    },
+    {
+        "text": "Amount",
+        "top": 724,
+        "left": 1269,
+        "height": 29,
+        "width": 84
+    },
+    {
+        "text": "1.25",
+        "top": 853,
+        "left": 1312,
+        "height": 29,
+        "width": 42
+    },
+    {
+        "text": "9.90",
+        "top": 911,
+        "left": 1312,
+        "height": 29,
+        "width": 42
+    },
+    {
+        "text": "1.45",
+        "top": 971,
+        "left": 1312,
+        "height": 29,
+        "width": 42
+    },
+    {
+        "text": "12.60",
+        "top": 1342,
+        "left": 1300,
+        "height": 29,
+        "width": 54
+    },
+    {
+        "text": "5.40",
+        "top": 1397,
+        "left": 1312,
+        "height": 29,
+        "width": 42
+    },
+    {
+        "text": "4.2%",
+        "top": 1451,
+        "left": 1304,
+        "height": 29,
+        "width": 50
+    },
+    {
+        "text": "0.30",
+        "top": 1505,
+        "left": 1312,
+        "height": 29,
+        "width": 42
+    },
+    {
+        "text": "Invoice",
+        "top": 1642,
+        "left": 1105,
+        "height": 29,
+        "width": 73
+    },
+    {
+        "text": "total",
+        "top": 1672,
+        "left": 1131,
+        "height": 29,
+        "width": 47
+    },
+    {
+        "text": "$",
+        "top": 1640,
+        "left": 1232,
+        "height": 65,
+        "width": 27
+    },
+    {
+        "text": "7.50",
+        "top": 1640,
+        "left": 1274,
+        "height": 65,
+        "width": 96
+    }
+]

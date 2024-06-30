@@ -1,0 +1,41 @@
+{
+  "invoiceDate": {
+    "value": "21 Sep, 1999",
+    "top": 372,
+    "left": 571,
+    "height": 53,
+    "width": 270
+  },
+  "invoiceNumber": {
+    "value": "#270572",
+    "top": 379,
+    "left": 266,
+    "height": 46,
+    "width": 304
+  },
+  "invoiceGrossAmount": {
+    "value": "$ 7.50",
+    "top": 1625,
+    "left": 1191,
+    "height": 91,
+    "width": 220
+  },
+  "invoiceTaxAmount": {
+    "value": "0.30",
+    "top": 1492,
+    "left": 1191,
+    "height": 54,
+    "width": 176
+  },
+  "orderNumber": null,
+  "issuerName": {
+    "value": "Donovan, James and Barron",
+    "top": 465,
+    "left": 571,
+    "height": 28,
+    "width": 619
+  },
+  "issuerIBAN": null,
+  "issuerAddress": null,
+  "issuerCity": null
+}

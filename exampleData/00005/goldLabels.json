@@ -1,0 +1,41 @@
+{
+  "invoiceDate": {
+    "value": "10/01/2000",
+    "top": 293,
+    "left": 1405,
+    "height": 36,
+    "width": 202
+  },
+  "invoiceNumber": {
+    "value": "#42988",
+    "top": 255,
+    "left": 1467,
+    "height": 37,
+    "width": 140
+  },
+  "invoiceGrossAmount": {
+    "value": "$ 68.47",
+    "top": 1558,
+    "left": 1385,
+    "height": 39,
+    "width": 220
+  },
+  "invoiceTaxAmount": null,
+  "orderNumber": null,
+  "issuerName": {
+    "value": "Becker Group",
+    "top": 94,
+    "left": 95,
+    "height": 40,
+    "width": 755
+  },
+  "issuerIBAN": null,
+  "issuerAddress": {
+    "value": "2530 Jennifer Orchard Suite 638",
+    "top": 236,
+    "left": 95,
+    "height": 38,
+    "width": 755
+  },
+  "issuerCity": null
+}

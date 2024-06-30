@@ -1,0 +1,234 @@
+[
+    {
+        "tag": "buyer.bill.address.city",
+        "value": "Woodardport, AL 94182",
+        "top": 560,
+        "left": 266,
+        "height": 28,
+        "width": 304
+    },
+    {
+        "tag": "buyer.bill.address.city.postcode",
+        "value": "94182",
+        "top": 588,
+        "left": 266,
+        "height": 98,
+        "width": 304
+    },
+    {
+        "tag": "buyer.bill.address.street",
+        "value": "3221 Sanchez Underpass",
+        "top": 532,
+        "left": 266,
+        "height": 28,
+        "width": 304
+    },
+    {
+        "tag": "buyer.bill.contact",
+        "value": "Terri Clark",
+        "top": 499,
+        "left": 266,
+        "height": 33,
+        "width": 304
+    },
+    {
+        "tag": "invoice_date",
+        "value": "21 Sep, 1999",
+        "top": 372,
+        "left": 571,
+        "height": 53,
+        "width": 270
+    },
+    {
+        "tag": "invoice_number",
+        "value": "#270572",
+        "top": 379,
+        "left": 266,
+        "height": 46,
+        "width": 304
+    },
+    {
+        "tag": "payment_terms",
+        "value": "Cash next delivery",
+        "top": 1806,
+        "left": 266,
+        "height": 101,
+        "width": 615
+    },
+    {
+        "tag": "products.0.description",
+        "value": "Daisy Garden Marker",
+        "top": 840,
+        "left": 266,
+        "height": 57,
+        "width": 615
+    },
+    {
+        "tag": "products.0.quantity",
+        "value": "1",
+        "top": 840,
+        "left": 1045,
+        "height": 57,
+        "width": 145
+    },
+    {
+        "tag": "products.0.total",
+        "value": "1.25",
+        "top": 840,
+        "left": 1191,
+        "height": 57,
+        "width": 176
+    },
+    {
+        "tag": "products.0.unit_price",
+        "value": "1.25",
+        "top": 840,
+        "left": 882,
+        "height": 57,
+        "width": 120
+    },
+    {
+        "tag": "products.1.description",
+        "value": "Plasters In Tin Woodland Animals",
+        "top": 898,
+        "left": 266,
+        "height": 57,
+        "width": 615
+    },
+    {
+        "tag": "products.1.quantity",
+        "value": "6",
+        "top": 898,
+        "left": 1045,
+        "height": 57,
+        "width": 145
+    },
+    {
+        "tag": "products.1.total",
+        "value": "9.90",
+        "top": 898,
+        "left": 1191,
+        "height": 57,
+        "width": 176
+    },
+    {
+        "tag": "products.1.unit_price",
+        "value": "1.65",
+        "top": 898,
+        "left": 882,
+        "height": 57,
+        "width": 120
+    },
+    {
+        "tag": "products.2.description",
+        "value": "6 Ribbons Rustic Charm",
+        "top": 956,
+        "left": 266,
+        "height": 58,
+        "width": 615
+    },
+    {
+        "tag": "products.2.quantity",
+        "value": "1",
+        "top": 956,
+        "left": 1045,
+        "height": 58,
+        "width": 145
+    },
+    {
+        "tag": "products.2.total",
+        "value": "1.45",
+        "top": 956,
+        "left": 1191,
+        "height": 58,
+        "width": 176
+    },
+    {
+        "tag": "products.2.unit_price",
+        "value": "1.45",
+        "top": 956,
+        "left": 882,
+        "height": 58,
+        "width": 120
+    },
+    {
+        "tag": "seller.address",
+        "value": "3325 Salas Springs Apt. 669\nJamesbury, OK 57993",
+        "top": 493,
+        "left": 571,
+        "height": 54,
+        "width": 619
+    },
+    {
+        "tag": "seller.company.name",
+        "value": "Donovan, James and Barron",
+        "top": 465,
+        "left": 571,
+        "height": 28,
+        "width": 619
+    },
+    {
+        "tag": "seller.email",
+        "value": "ytaylor@hurley.com",
+        "top": 574,
+        "left": 571,
+        "height": 28,
+        "width": 619
+    },
+    {
+        "tag": "seller.phone_number",
+        "value": "(717)576-8107",
+        "top": 547,
+        "left": 571,
+        "height": 27,
+        "width": 619
+    },
+    {
+        "tag": "seller.website",
+        "value": "gray.org",
+        "top": 603,
+        "left": 571,
+        "height": 29,
+        "width": 96
+    },
+    {
+        "tag": "summary.balance",
+        "value": "$ 7.50",
+        "top": 1625,
+        "left": 1191,
+        "height": 91,
+        "width": 220
+    },
+    {
+        "tag": "summary.discount",
+        "value": "5.40",
+        "top": 1384,
+        "left": 1191,
+        "height": 53,
+        "width": 176
+    },
+    {
+        "tag": "summary.subtotal",
+        "value": "12.60",
+        "top": 1330,
+        "left": 1191,
+        "height": 53,
+        "width": 176
+    },
+    {
+        "tag": "summary.tax_rate",
+        "value": "4.2%",
+        "top": 1438,
+        "left": 1191,
+        "height": 53,
+        "width": 176
+    },
+    {
+        "tag": "summary.tax_total",
+        "value": "0.30",
+        "top": 1492,
+        "left": 1191,
+        "height": 54,
+        "width": 176
+    }
+]

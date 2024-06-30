@@ -1,0 +1,751 @@
+[
+    {
+        "text": "RILEY-RICHARDSON",
+        "top": 89,
+        "left": 124,
+        "height": 60,
+        "width": 366
+    },
+    {
+        "text": "04/02/2020",
+        "top": 159,
+        "left": 124,
+        "height": 38,
+        "width": 137
+    },
+    {
+        "text": "INVOICE",
+        "top": 279,
+        "left": 94,
+        "height": 44,
+        "width": 107
+    },
+    {
+        "text": "#528910",
+        "top": 279,
+        "left": 211,
+        "height": 44,
+        "width": 109
+    },
+    {
+        "text": "Bill",
+        "top": 371,
+        "left": 116,
+        "height": 28,
+        "width": 30
+    },
+    {
+        "text": "To",
+        "top": 371,
+        "left": 154,
+        "height": 28,
+        "width": 19
+    },
+    {
+        "text": "Customer",
+        "top": 434,
+        "left": 116,
+        "height": 28,
+        "width": 86
+    },
+    {
+        "text": "Customer",
+        "top": 500,
+        "left": 116,
+        "height": 28,
+        "width": 86
+    },
+    {
+        "text": "ID#",
+        "top": 500,
+        "left": 210,
+        "height": 28,
+        "width": 28
+    },
+    {
+        "text": "Address",
+        "top": 542,
+        "left": 116,
+        "height": 28,
+        "width": 76
+    },
+    {
+        "text": "Phone",
+        "top": 609,
+        "left": 116,
+        "height": 28,
+        "width": 60
+    },
+    {
+        "text": "Payment",
+        "top": 688,
+        "left": 116,
+        "height": 28,
+        "width": 77
+    },
+    {
+        "text": "Due",
+        "top": 688,
+        "left": 199,
+        "height": 28,
+        "width": 35
+    },
+    {
+        "text": "Salesperson",
+        "top": 730,
+        "left": 116,
+        "height": 28,
+        "width": 114
+    },
+    {
+        "text": "Payment",
+        "top": 771,
+        "left": 116,
+        "height": 28,
+        "width": 77
+    },
+    {
+        "text": "Terms",
+        "top": 771,
+        "left": 199,
+        "height": 28,
+        "width": 53
+    },
+    {
+        "text": "Brian",
+        "top": 434,
+        "left": 387,
+        "height": 28,
+        "width": 49
+    },
+    {
+        "text": "Smith",
+        "top": 434,
+        "left": 443,
+        "height": 28,
+        "width": 51
+    },
+    {
+        "text": "Roberts",
+        "top": 459,
+        "left": 387,
+        "height": 28,
+        "width": 71
+    },
+    {
+        "text": "Ltd",
+        "top": 459,
+        "left": 466,
+        "height": 28,
+        "width": 28
+    },
+    {
+        "text": "9844169",
+        "top": 500,
+        "left": 387,
+        "height": 28,
+        "width": 71
+    },
+    {
+        "text": "900",
+        "top": 542,
+        "left": 387,
+        "height": 28,
+        "width": 32
+    },
+    {
+        "text": "Joshua",
+        "top": 542,
+        "left": 425,
+        "height": 28,
+        "width": 65
+    },
+    {
+        "text": "Street",
+        "top": 542,
+        "left": 496,
+        "height": 28,
+        "width": 52
+    },
+    {
+        "text": "Suite",
+        "top": 542,
+        "left": 554,
+        "height": 28,
+        "width": 46
+    },
+    {
+        "text": "117",
+        "top": 542,
+        "left": 606,
+        "height": 28,
+        "width": 25
+    },
+    {
+        "text": "West",
+        "top": 567,
+        "left": 387,
+        "height": 28,
+        "width": 44
+    },
+    {
+        "text": "Michelle,",
+        "top": 567,
+        "left": 437,
+        "height": 28,
+        "width": 83
+    },
+    {
+        "text": "VT",
+        "top": 567,
+        "left": 527,
+        "height": 28,
+        "width": 20
+    },
+    {
+        "text": "97660",
+        "top": 567,
+        "left": 554,
+        "height": 28,
+        "width": 50
+    },
+    {
+        "text": "+98",
+        "top": 609,
+        "left": 387,
+        "height": 28,
+        "width": 31
+    },
+    {
+        "text": "13",
+        "top": 609,
+        "left": 425,
+        "height": 28,
+        "width": 18
+    },
+    {
+        "text": "5455",
+        "top": 609,
+        "left": 450,
+        "height": 28,
+        "width": 41
+    },
+    {
+        "text": "4662",
+        "top": 609,
+        "left": 498,
+        "height": 28,
+        "width": 41
+    },
+    {
+        "text": "05/02/2020",
+        "top": 688,
+        "left": 387,
+        "height": 28,
+        "width": 105
+    },
+    {
+        "text": "Robert",
+        "top": 730,
+        "left": 387,
+        "height": 28,
+        "width": 63
+    },
+    {
+        "text": "Martinez",
+        "top": 730,
+        "left": 456,
+        "height": 28,
+        "width": 79
+    },
+    {
+        "text": "Payment",
+        "top": 771,
+        "left": 387,
+        "height": 28,
+        "width": 77
+    },
+    {
+        "text": "terms:",
+        "top": 771,
+        "left": 471,
+        "height": 28,
+        "width": 56
+    },
+    {
+        "text": "Cash",
+        "top": 771,
+        "left": 533,
+        "height": 28,
+        "width": 43
+    },
+    {
+        "text": "account",
+        "top": 771,
+        "left": 583,
+        "height": 28,
+        "width": 75
+    },
+    {
+        "text": "Ship",
+        "top": 371,
+        "left": 873,
+        "height": 28,
+        "width": 41
+    },
+    {
+        "text": "To",
+        "top": 371,
+        "left": 921,
+        "height": 28,
+        "width": 19
+    },
+    {
+        "text": "Recipient",
+        "top": 434,
+        "left": 873,
+        "height": 28,
+        "width": 88
+    },
+    {
+        "text": "Address",
+        "top": 500,
+        "left": 873,
+        "height": 28,
+        "width": 76
+    },
+    {
+        "text": "Phone",
+        "top": 567,
+        "left": 873,
+        "height": 28,
+        "width": 60
+    },
+    {
+        "text": "Joseph",
+        "top": 434,
+        "left": 1142,
+        "height": 28,
+        "width": 64
+    },
+    {
+        "text": "Morgan",
+        "top": 434,
+        "left": 1213,
+        "height": 28,
+        "width": 70
+    },
+    {
+        "text": "Roberts",
+        "top": 459,
+        "left": 1142,
+        "height": 28,
+        "width": 71
+    },
+    {
+        "text": "Ltd",
+        "top": 459,
+        "left": 1221,
+        "height": 28,
+        "width": 28
+    },
+    {
+        "text": "4092",
+        "top": 500,
+        "left": 1142,
+        "height": 28,
+        "width": 41
+    },
+    {
+        "text": "Johnson",
+        "top": 500,
+        "left": 1190,
+        "height": 28,
+        "width": 78
+    },
+    {
+        "text": "Brook",
+        "top": 500,
+        "left": 1275,
+        "height": 28,
+        "width": 55
+    },
+    {
+        "text": "North",
+        "top": 525,
+        "left": 1142,
+        "height": 28,
+        "width": 53
+    },
+    {
+        "text": "Yvonnetown,",
+        "top": 525,
+        "left": 1202,
+        "height": 28,
+        "width": 118
+    },
+    {
+        "text": "LA",
+        "top": 525,
+        "left": 1328,
+        "height": 28,
+        "width": 21
+    },
+    {
+        "text": "24482",
+        "top": 525,
+        "left": 1357,
+        "height": 28,
+        "width": 51
+    },
+    {
+        "text": "+970",
+        "top": 567,
+        "left": 1142,
+        "height": 28,
+        "width": 40
+    },
+    {
+        "text": "8",
+        "top": 567,
+        "left": 1188,
+        "height": 28,
+        "width": 10
+    },
+    {
+        "text": "283",
+        "top": 567,
+        "left": 1205,
+        "height": 28,
+        "width": 30
+    },
+    {
+        "text": "1394",
+        "top": 567,
+        "left": 1242,
+        "height": 28,
+        "width": 39
+    },
+    {
+        "text": "Delivery",
+        "top": 688,
+        "left": 873,
+        "height": 28,
+        "width": 74
+    },
+    {
+        "text": "Date",
+        "top": 688,
+        "left": 954,
+        "height": 28,
+        "width": 40
+    },
+    {
+        "text": "Shipping",
+        "top": 730,
+        "left": 873,
+        "height": 28,
+        "width": 83
+    },
+    {
+        "text": "Method",
+        "top": 730,
+        "left": 963,
+        "height": 28,
+        "width": 70
+    },
+    {
+        "text": "Shipping",
+        "top": 771,
+        "left": 873,
+        "height": 28,
+        "width": 83
+    },
+    {
+        "text": "Terms",
+        "top": 771,
+        "left": 963,
+        "height": 28,
+        "width": 53
+    },
+    {
+        "text": "DHL",
+        "top": 730,
+        "left": 1142,
+        "height": 28,
+        "width": 36
+    },
+    {
+        "text": "Payment",
+        "top": 771,
+        "left": 1142,
+        "height": 28,
+        "width": 77
+    },
+    {
+        "text": "terms:",
+        "top": 771,
+        "left": 1225,
+        "height": 28,
+        "width": 56
+    },
+    {
+        "text": "Cash",
+        "top": 771,
+        "left": 1288,
+        "height": 28,
+        "width": 43
+    },
+    {
+        "text": "account",
+        "top": 771,
+        "left": 1338,
+        "height": 28,
+        "width": 75
+    },
+    {
+        "text": "Qty.",
+        "top": 899,
+        "left": 129,
+        "height": 28,
+        "width": 35
+    },
+    {
+        "text": "Item#",
+        "top": 899,
+        "left": 237,
+        "height": 28,
+        "width": 49
+    },
+    {
+        "text": "Description",
+        "top": 899,
+        "left": 345,
+        "height": 28,
+        "width": 107
+    },
+    {
+        "text": "Unit",
+        "top": 899,
+        "left": 927,
+        "height": 28,
+        "width": 38
+    },
+    {
+        "text": "Price",
+        "top": 899,
+        "left": 971,
+        "height": 28,
+        "width": 48
+    },
+    {
+        "text": "Discount",
+        "top": 899,
+        "left": 1161,
+        "height": 28,
+        "width": 84
+    },
+    {
+        "text": "Line",
+        "top": 899,
+        "left": 1394,
+        "height": 28,
+        "width": 40
+    },
+    {
+        "text": "Total",
+        "top": 899,
+        "left": 1440,
+        "height": 28,
+        "width": 43
+    },
+    {
+        "text": "7",
+        "top": 959,
+        "left": 143,
+        "height": 28,
+        "width": 8
+    },
+    {
+        "text": "5825",
+        "top": 959,
+        "left": 241,
+        "height": 28,
+        "width": 41
+    },
+    {
+        "text": "S/4",
+        "top": 959,
+        "left": 345,
+        "height": 28,
+        "width": 31
+    },
+    {
+        "text": "Ivory",
+        "top": 959,
+        "left": 383,
+        "height": 28,
+        "width": 47
+    },
+    {
+        "text": "Mini",
+        "top": 959,
+        "left": 437,
+        "height": 28,
+        "width": 40
+    },
+    {
+        "text": "Rose",
+        "top": 959,
+        "left": 485,
+        "height": 28,
+        "width": 46
+    },
+    {
+        "text": "Candle",
+        "top": 959,
+        "left": 537,
+        "height": 28,
+        "width": 63
+    },
+    {
+        "text": "In",
+        "top": 959,
+        "left": 606,
+        "height": 28,
+        "width": 18
+    },
+    {
+        "text": "Bowl",
+        "top": 959,
+        "left": 631,
+        "height": 28,
+        "width": 45
+    },
+    {
+        "text": "1.65",
+        "top": 959,
+        "left": 1085,
+        "height": 28,
+        "width": 32
+    },
+    {
+        "text": "11.55",
+        "top": 959,
+        "left": 1544,
+        "height": 28,
+        "width": 41
+    },
+    {
+        "text": "Total",
+        "top": 1382,
+        "left": 1219,
+        "height": 28,
+        "width": 43
+    },
+    {
+        "text": "Discount",
+        "top": 1382,
+        "left": 1269,
+        "height": 28,
+        "width": 84
+    },
+    {
+        "text": "Subtotal",
+        "top": 1443,
+        "left": 1275,
+        "height": 28,
+        "width": 76
+    },
+    {
+        "text": "Sales",
+        "top": 1503,
+        "left": 1269,
+        "height": 28,
+        "width": 46
+    },
+    {
+        "text": "Tax",
+        "top": 1503,
+        "left": 1323,
+        "height": 28,
+        "width": 30
+    },
+    {
+        "text": "Total",
+        "top": 1564,
+        "left": 1308,
+        "height": 28,
+        "width": 43
+    },
+    {
+        "text": "7.31",
+        "top": 1382,
+        "left": 1554,
+        "height": 28,
+        "width": 31
+    },
+    {
+        "text": "11.55",
+        "top": 1443,
+        "left": 1544,
+        "height": 28,
+        "width": 41
+    },
+    {
+        "text": "0.16",
+        "top": 1503,
+        "left": 1554,
+        "height": 28,
+        "width": 31
+    },
+    {
+        "text": "$",
+        "top": 1564,
+        "left": 1534,
+        "height": 28,
+        "width": 10
+    },
+    {
+        "text": "4.40",
+        "top": 1564,
+        "left": 1550,
+        "height": 28,
+        "width": 36
+    },
+    {
+        "text": "Thank",
+        "top": 1656,
+        "left": 94,
+        "height": 38,
+        "width": 73
+    },
+    {
+        "text": "you",
+        "top": 1656,
+        "left": 175,
+        "height": 38,
+        "width": 42
+    },
+    {
+        "text": "for",
+        "top": 1656,
+        "left": 227,
+        "height": 38,
+        "width": 33
+    },
+    {
+        "text": "your",
+        "top": 1656,
+        "left": 269,
+        "height": 38,
+        "width": 53
+    },
+    {
+        "text": "business!",
+        "top": 1656,
+        "left": 332,
+        "height": 38,
+        "width": 117
+    }
+]

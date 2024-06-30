@@ -1,0 +1,18 @@
+{
+    "invoice": {
+        "template": "templates/Invoice_16.htm",
+        "logo": "logos/starterre.png",
+        "font": "fonts/Roboto_Slab/RobotoSlab-Bold.ttf",
+        "dpi": 200,
+        "color_map": {
+            "#595959": "#595959"
+        },
+        "font_scale": 1.0918449168223128,
+        "margin": 12
+    },
+    "warping": {
+        "environment": "environments/9C4A7998-693326a46e.exr",
+        "mesh": "meshes/objs/C/2/2_611_7.obj",
+        "resolution": 1600
+    }
+}

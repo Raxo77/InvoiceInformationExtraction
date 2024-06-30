@@ -1,0 +1,75 @@
+{
+    "buyer": {
+        "bill": {
+            "address": {
+                "city": {
+                    "city_name": "North Marilynview",
+                    "postcode": "89485",
+                    "state_abbr": "KS"
+                },
+                "street": {
+                    "building_number": "600",
+                    "street_name": "Smith Villages"
+                }
+            },
+            "contact": {
+                "first_name": "Elizabeth",
+                "last_name": "Davis"
+            }
+        },
+        "company": {
+            "name": "Young, Flores and Vargas"
+        }
+    },
+    "invoice_date": {
+        "day": 1,
+        "month": 10,
+        "year": 2000
+    },
+    "invoice_number": 42988,
+    "payment_terms": "Net 90",
+    "products": {
+        "0": {
+            "description": "Paper chain kit vintage christmas",
+            "quantity": 5,
+            "total": 12.75,
+            "unit_price": 2.55
+        },
+        "1": {
+            "description": "Blue diner wall clock",
+            "quantity": 5,
+            "total": 42.5,
+            "unit_price": 8.5
+        },
+        "2": {
+            "description": "Sketchbook magnetic shopping list",
+            "quantity": 7,
+            "total": 10.15,
+            "unit_price": 1.45
+        }
+    },
+    "seller": {
+        "address": {
+            "street": {
+                "building_number": "2530",
+                "secondary_address": "Suite 638",
+                "street_name": "Jennifer Orchard"
+            }
+        },
+        "company": {
+            "name": "Becker Group",
+            "slogan": "Synergized executive moratorium"
+        },
+        "fax_number": {
+            "country_code": 66,
+            "national_number": 36277775
+        },
+        "phone_number": {
+            "country_code": 46,
+            "national_number": 891310817
+        }
+    },
+    "summary": {
+        "balance": 68.47
+    }
+}

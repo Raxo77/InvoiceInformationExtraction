@@ -1,0 +1,210 @@
+[
+    {
+        "tag": "buyer.bill.address.city",
+        "value": "North Marilynview, KS 89485",
+        "top": 587,
+        "left": 95,
+        "height": 136,
+        "width": 755
+    },
+    {
+        "tag": "buyer.bill.address.street",
+        "value": "600 Smith Villages",
+        "top": 549,
+        "left": 95,
+        "height": 38,
+        "width": 755
+    },
+    {
+        "tag": "buyer.bill.contact",
+        "value": "Elizabeth Davis",
+        "top": 460,
+        "left": 95,
+        "height": 50,
+        "width": 755
+    },
+    {
+        "tag": "buyer.company.name",
+        "value": "Young, Flores and Vargas",
+        "top": 510,
+        "left": 95,
+        "height": 39,
+        "width": 755
+    },
+    {
+        "tag": "invoice_date",
+        "value": "10/01/2000",
+        "top": 293,
+        "left": 1405,
+        "height": 36,
+        "width": 202
+    },
+    {
+        "tag": "invoice_number",
+        "value": "#42988",
+        "top": 255,
+        "left": 1467,
+        "height": 37,
+        "width": 140
+    },
+    {
+        "tag": "payment_terms",
+        "value": "Payment 90 days after invoice date",
+        "top": 1600,
+        "left": 95,
+        "height": 37,
+        "width": 1512
+    },
+    {
+        "tag": "products.0.description",
+        "value": "Paper chain kit vintage christmas",
+        "top": 774,
+        "left": 95,
+        "height": 47,
+        "width": 810
+    },
+    {
+        "tag": "products.0.quantity",
+        "value": "5",
+        "top": 774,
+        "left": 906,
+        "height": 47,
+        "width": 232
+    },
+    {
+        "tag": "products.0.total",
+        "value": "12.75",
+        "top": 774,
+        "left": 1369,
+        "height": 47,
+        "width": 236
+    },
+    {
+        "tag": "products.0.unit_price",
+        "value": "2.55",
+        "top": 774,
+        "left": 1139,
+        "height": 47,
+        "width": 229
+    },
+    {
+        "tag": "products.1.description",
+        "value": "Blue diner wall clock",
+        "top": 822,
+        "left": 95,
+        "height": 45,
+        "width": 810
+    },
+    {
+        "tag": "products.1.quantity",
+        "value": "5",
+        "top": 822,
+        "left": 906,
+        "height": 45,
+        "width": 232
+    },
+    {
+        "tag": "products.1.total",
+        "value": "42.50",
+        "top": 822,
+        "left": 1369,
+        "height": 45,
+        "width": 236
+    },
+    {
+        "tag": "products.1.unit_price",
+        "value": "8.50",
+        "top": 822,
+        "left": 1139,
+        "height": 45,
+        "width": 229
+    },
+    {
+        "tag": "products.2.description",
+        "value": "Sketchbook magnetic shopping list",
+        "top": 868,
+        "left": 95,
+        "height": 45,
+        "width": 810
+    },
+    {
+        "tag": "products.2.quantity",
+        "value": "7",
+        "top": 868,
+        "left": 906,
+        "height": 45,
+        "width": 232
+    },
+    {
+        "tag": "products.2.total",
+        "value": "10.15",
+        "top": 868,
+        "left": 1369,
+        "height": 45,
+        "width": 236
+    },
+    {
+        "tag": "products.2.unit_price",
+        "value": "1.45",
+        "top": 868,
+        "left": 1139,
+        "height": 45,
+        "width": 229
+    },
+    {
+        "tag": "seller.address.street",
+        "value": "2530 Jennifer Orchard Suite 638",
+        "top": 185,
+        "left": 95,
+        "height": 51,
+        "width": 755
+    },
+    {
+        "tag": "seller.address.street",
+        "value": "2530 Jennifer Orchard Suite 638",
+        "top": 236,
+        "left": 95,
+        "height": 38,
+        "width": 755
+    },
+    {
+        "tag": "seller.company.name",
+        "value": "Becker Group",
+        "top": 94,
+        "left": 95,
+        "height": 40,
+        "width": 755
+    },
+    {
+        "tag": "seller.company.slogan",
+        "value": "Synergized executive moratorium",
+        "top": 134,
+        "left": 95,
+        "height": 51,
+        "width": 755
+    },
+    {
+        "tag": "seller.fax_number",
+        "value": "+66 3627 7775",
+        "top": 311,
+        "left": 177,
+        "height": 116,
+        "width": 673
+    },
+    {
+        "tag": "seller.phone_number",
+        "value": "+46 (0)8 913 108 17",
+        "top": 274,
+        "left": 95,
+        "height": 37,
+        "width": 755
+    },
+    {
+        "tag": "summary.balance",
+        "value": "$ 68.47",
+        "top": 1558,
+        "left": 1385,
+        "height": 39,
+        "width": 220
+    }
+]

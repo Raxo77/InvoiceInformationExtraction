@@ -1,0 +1,78 @@
+{
+    "buyer": {
+        "bill": {
+            "address": {
+                "city": {
+                    "city_name": "Woodardport",
+                    "postcode": "94182",
+                    "state_abbr": "AL"
+                },
+                "street": {
+                    "building_number": "3221",
+                    "street_name": "Sanchez Underpass"
+                }
+            },
+            "contact": {
+                "first_name": "Terri",
+                "last_name": "Clark"
+            }
+        }
+    },
+    "invoice_date": {
+        "day": 21,
+        "month": 9,
+        "year": 1999
+    },
+    "invoice_number": 270572,
+    "payment_terms": "CND",
+    "products": {
+        "0": {
+            "description": "Daisy Garden Marker",
+            "quantity": 1,
+            "total": 1.25,
+            "unit_price": 1.25
+        },
+        "1": {
+            "description": "Plasters In Tin Woodland Animals",
+            "quantity": 6,
+            "total": 9.9,
+            "unit_price": 1.65
+        },
+        "2": {
+            "description": "6 Ribbons Rustic Charm",
+            "quantity": 1,
+            "total": 1.45,
+            "unit_price": 1.45
+        }
+    },
+    "seller": {
+        "address": {
+            "city": {
+                "city_name": "Jamesbury",
+                "postcode": "57993",
+                "state_abbr": "OK"
+            },
+            "street": {
+                "building_number": "3325",
+                "secondary_address": "Apt. 669",
+                "street_name": "Salas Springs"
+            }
+        },
+        "company": {
+            "name": "Donovan, James and Barron"
+        },
+        "email": "ytaylor@hurley.com",
+        "phone_number": {
+            "country_code": 1,
+            "national_number": 7175768107
+        },
+        "website": "gray.org"
+    },
+    "summary": {
+        "balance": 7.5,
+        "discount": 5.4,
+        "subtotal": 12.6,
+        "tax_rate": 0.042,
+        "tax_total": 0.3
+    }
+}

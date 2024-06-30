@@ -1,0 +1,22 @@
+{
+    "invoice": {
+        "template": "templates/Invoice_17.htm",
+        "logo": "logos/maison-facile.png",
+        "font": "fonts/Fira_Sans/FiraSans-Light.ttf",
+        "dpi": 200,
+        "color_map": {
+            "#404040": "#404040",
+            "#1F4E79": "#1f7958",
+            "#5B9BD5": "#5a5fd5",
+            "#2E74B5": "#2eb548",
+            "#DEEAF6": "#f4def6"
+        },
+        "font_scale": 0.8128388663784335,
+        "margin": 12
+    },
+    "warping": {
+        "environment": "environments/AG8A6771-bd4e966e71.exr",
+        "mesh": "meshes/objs/C/1/1_720_1.obj",
+        "resolution": 1600
+    }
+}

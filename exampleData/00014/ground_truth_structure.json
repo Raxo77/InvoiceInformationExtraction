@@ -1,0 +1,90 @@
+{
+    "buyer": {
+        "bill": {
+            "address": {
+                "city": {
+                    "city_name": "West Michelle",
+                    "postcode": "97660",
+                    "state_abbr": "VT"
+                },
+                "street": {
+                    "building_number": "900",
+                    "secondary_address": "Suite 117",
+                    "street_name": "Joshua Street"
+                }
+            },
+            "contact": {
+                "first_name": "Brian",
+                "last_name": "Smith"
+            },
+            "customer_id": 9844169,
+            "phone_number": {
+                "country_code": 98,
+                "national_number": 1354554662
+            }
+        },
+        "company": {
+            "name": "Roberts Ltd"
+        },
+        "shipment": {
+            "address": {
+                "city": {
+                    "city_name": "North Yvonnetown",
+                    "postcode": "24482",
+                    "state_abbr": "LA"
+                },
+                "street": {
+                    "building_number": "4092",
+                    "street_name": "Johnson Brook"
+                }
+            },
+            "contact": {
+                "first_name": "Joseph",
+                "last_name": "Morgan"
+            },
+            "phone_number": {
+                "country_code": 970,
+                "national_number": 82831394
+            }
+        }
+    },
+    "invoice_date": {
+        "day": 2,
+        "month": 4,
+        "year": 2020
+    },
+    "invoice_due_date": {
+        "day": 2,
+        "month": 5,
+        "year": 2020
+    },
+    "invoice_number": 528910,
+    "payment_terms": "Cash account",
+    "products": {
+        "0": {
+            "description": "S/4 Ivory Mini Rose Candle In Bowl",
+            "id": 5825,
+            "quantity": 7,
+            "total": 11.55,
+            "unit_price": 1.65
+        }
+    },
+    "seller": {
+        "company": {
+            "name": "Riley-Richardson"
+        },
+        "salesperson": {
+            "first_name": "Robert",
+            "last_name": "Martinez"
+        }
+    },
+    "summary": {
+        "balance": 4.4,
+        "discount": 7.31,
+        "shipping": {
+            "method": "DHL"
+        },
+        "subtotal": 11.55,
+        "tax_total": 0.16
+    }
+}

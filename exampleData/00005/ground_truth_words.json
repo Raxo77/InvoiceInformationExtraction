@@ -1,0 +1,632 @@
+[
+    {
+        "text": "Becker",
+        "top": 89,
+        "left": 110,
+        "height": 48,
+        "width": 117
+    },
+    {
+        "text": "Group",
+        "top": 89,
+        "left": 235,
+        "height": 48,
+        "width": 103
+    },
+    {
+        "text": "Synergized",
+        "top": 130,
+        "left": 108,
+        "height": 44,
+        "width": 189
+    },
+    {
+        "text": "executive",
+        "top": 130,
+        "left": 293,
+        "height": 44,
+        "width": 164
+    },
+    {
+        "text": "moratorium",
+        "top": 130,
+        "left": 454,
+        "height": 44,
+        "width": 202
+    },
+    {
+        "text": "2530",
+        "top": 195,
+        "left": 110,
+        "height": 44,
+        "width": 75
+    },
+    {
+        "text": "Jennifer",
+        "top": 195,
+        "left": 193,
+        "height": 44,
+        "width": 131
+    },
+    {
+        "text": "Orchard",
+        "top": 195,
+        "left": 333,
+        "height": 44,
+        "width": 128
+    },
+    {
+        "text": "Suite",
+        "top": 195,
+        "left": 469,
+        "height": 44,
+        "width": 82
+    },
+    {
+        "text": "638",
+        "top": 195,
+        "left": 558,
+        "height": 44,
+        "width": 55
+    },
+    {
+        "text": "2530",
+        "top": 232,
+        "left": 110,
+        "height": 44,
+        "width": 75
+    },
+    {
+        "text": "Jennifer",
+        "top": 232,
+        "left": 193,
+        "height": 44,
+        "width": 131
+    },
+    {
+        "text": "Orchard",
+        "top": 232,
+        "left": 333,
+        "height": 44,
+        "width": 128
+    },
+    {
+        "text": "Suite",
+        "top": 232,
+        "left": 469,
+        "height": 44,
+        "width": 82
+    },
+    {
+        "text": "638",
+        "top": 232,
+        "left": 558,
+        "height": 44,
+        "width": 55
+    },
+    {
+        "text": "+46",
+        "top": 270,
+        "left": 110,
+        "height": 44,
+        "width": 56
+    },
+    {
+        "text": "(0)8",
+        "top": 270,
+        "left": 175,
+        "height": 44,
+        "width": 59
+    },
+    {
+        "text": "913",
+        "top": 270,
+        "left": 243,
+        "height": 44,
+        "width": 51
+    },
+    {
+        "text": "108",
+        "top": 270,
+        "left": 304,
+        "height": 44,
+        "width": 51
+    },
+    {
+        "text": "17",
+        "top": 270,
+        "left": 364,
+        "height": 44,
+        "width": 32
+    },
+    {
+        "text": "Fax:",
+        "top": 307,
+        "left": 110,
+        "height": 44,
+        "width": 67
+    },
+    {
+        "text": "+66",
+        "top": 307,
+        "left": 187,
+        "height": 44,
+        "width": 56
+    },
+    {
+        "text": "3627",
+        "top": 307,
+        "left": 252,
+        "height": 44,
+        "width": 74
+    },
+    {
+        "text": "7775",
+        "top": 307,
+        "left": 335,
+        "height": 44,
+        "width": 74
+    },
+    {
+        "text": "TO:",
+        "top": 424,
+        "left": 110,
+        "height": 44,
+        "width": 53
+    },
+    {
+        "text": "Elizabeth",
+        "top": 470,
+        "left": 110,
+        "height": 44,
+        "width": 148
+    },
+    {
+        "text": "Davis",
+        "top": 470,
+        "left": 266,
+        "height": 44,
+        "width": 89
+    },
+    {
+        "text": "Young,",
+        "top": 507,
+        "left": 110,
+        "height": 44,
+        "width": 110
+    },
+    {
+        "text": "Flores",
+        "top": 507,
+        "left": 229,
+        "height": 44,
+        "width": 98
+    },
+    {
+        "text": "and",
+        "top": 507,
+        "left": 335,
+        "height": 44,
+        "width": 59
+    },
+    {
+        "text": "Vargas",
+        "top": 507,
+        "left": 402,
+        "height": 44,
+        "width": 112
+    },
+    {
+        "text": "600",
+        "top": 545,
+        "left": 110,
+        "height": 44,
+        "width": 56
+    },
+    {
+        "text": "Smith",
+        "top": 545,
+        "left": 175,
+        "height": 44,
+        "width": 96
+    },
+    {
+        "text": "Villages",
+        "top": 545,
+        "left": 279,
+        "height": 44,
+        "width": 127
+    },
+    {
+        "text": "North",
+        "top": 582,
+        "left": 110,
+        "height": 44,
+        "width": 94
+    },
+    {
+        "text": "Marilynview,",
+        "top": 582,
+        "left": 212,
+        "height": 44,
+        "width": 210
+    },
+    {
+        "text": "KS",
+        "top": 582,
+        "left": 431,
+        "height": 44,
+        "width": 45
+    },
+    {
+        "text": "89485",
+        "top": 582,
+        "left": 485,
+        "height": 44,
+        "width": 92
+    },
+    {
+        "text": "INVOICE",
+        "top": 87,
+        "left": 1335,
+        "height": 80,
+        "width": 255
+    },
+    {
+        "text": "INVOICE",
+        "top": 251,
+        "left": 1329,
+        "height": 44,
+        "width": 142
+    },
+    {
+        "text": "#42988",
+        "top": 251,
+        "left": 1479,
+        "height": 44,
+        "width": 112
+    },
+    {
+        "text": "DATE:",
+        "top": 288,
+        "left": 1319,
+        "height": 44,
+        "width": 97
+    },
+    {
+        "text": "10/01/2000",
+        "top": 288,
+        "left": 1425,
+        "height": 44,
+        "width": 167
+    },
+    {
+        "text": "FOR:",
+        "top": 424,
+        "left": 867,
+        "height": 44,
+        "width": 74
+    },
+    {
+        "text": "Project",
+        "top": 470,
+        "left": 867,
+        "height": 44,
+        "width": 109
+    },
+    {
+        "text": "or",
+        "top": 470,
+        "left": 986,
+        "height": 44,
+        "width": 33
+    },
+    {
+        "text": "service",
+        "top": 470,
+        "left": 1027,
+        "height": 44,
+        "width": 113
+    },
+    {
+        "text": "description",
+        "top": 470,
+        "left": 1148,
+        "height": 44,
+        "width": 177
+    },
+    {
+        "text": "P.O.",
+        "top": 505,
+        "left": 867,
+        "height": 44,
+        "width": 52
+    },
+    {
+        "text": "Number",
+        "top": 505,
+        "left": 927,
+        "height": 44,
+        "width": 129
+    },
+    {
+        "text": "DESCRIPTION",
+        "top": 728,
+        "left": 387,
+        "height": 44,
+        "width": 226
+    },
+    {
+        "text": "HOURS",
+        "top": 728,
+        "left": 963,
+        "height": 44,
+        "width": 118
+    },
+    {
+        "text": "RATE",
+        "top": 728,
+        "left": 1210,
+        "height": 44,
+        "width": 90
+    },
+    {
+        "text": "AMOUNT",
+        "top": 728,
+        "left": 1410,
+        "height": 44,
+        "width": 156
+    },
+    {
+        "text": "Paper",
+        "top": 776,
+        "left": 112,
+        "height": 44,
+        "width": 91
+    },
+    {
+        "text": "chain",
+        "top": 776,
+        "left": 212,
+        "height": 44,
+        "width": 88
+    },
+    {
+        "text": "kit",
+        "top": 776,
+        "left": 308,
+        "height": 44,
+        "width": 43
+    },
+    {
+        "text": "vintage",
+        "top": 776,
+        "left": 360,
+        "height": 44,
+        "width": 119
+    },
+    {
+        "text": "christmas",
+        "top": 776,
+        "left": 487,
+        "height": 44,
+        "width": 158
+    },
+    {
+        "text": "Blue",
+        "top": 822,
+        "left": 112,
+        "height": 44,
+        "width": 71
+    },
+    {
+        "text": "diner",
+        "top": 822,
+        "left": 191,
+        "height": 44,
+        "width": 81
+    },
+    {
+        "text": "wall",
+        "top": 822,
+        "left": 281,
+        "height": 44,
+        "width": 69
+    },
+    {
+        "text": "clock",
+        "top": 822,
+        "left": 358,
+        "height": 44,
+        "width": 84
+    },
+    {
+        "text": "Sketchbook",
+        "top": 868,
+        "left": 112,
+        "height": 44,
+        "width": 186
+    },
+    {
+        "text": "magnetic",
+        "top": 868,
+        "left": 306,
+        "height": 44,
+        "width": 146
+    },
+    {
+        "text": "shopping",
+        "top": 868,
+        "left": 460,
+        "height": 44,
+        "width": 148
+    },
+    {
+        "text": "list",
+        "top": 868,
+        "left": 617,
+        "height": 44,
+        "width": 49
+    },
+    {
+        "text": "Payment",
+        "top": 1596,
+        "left": 94,
+        "height": 44,
+        "width": 141
+    },
+    {
+        "text": "90",
+        "top": 1596,
+        "left": 244,
+        "height": 44,
+        "width": 37
+    },
+    {
+        "text": "days",
+        "top": 1596,
+        "left": 290,
+        "height": 44,
+        "width": 75
+    },
+    {
+        "text": "after",
+        "top": 1596,
+        "left": 373,
+        "height": 44,
+        "width": 74
+    },
+    {
+        "text": "invoice",
+        "top": 1596,
+        "left": 457,
+        "height": 44,
+        "width": 113
+    },
+    {
+        "text": "date",
+        "top": 1596,
+        "left": 578,
+        "height": 44,
+        "width": 67
+    },
+    {
+        "text": "5",
+        "top": 776,
+        "left": 923,
+        "height": 44,
+        "width": 17
+    },
+    {
+        "text": "5",
+        "top": 822,
+        "left": 923,
+        "height": 44,
+        "width": 17
+    },
+    {
+        "text": "7",
+        "top": 868,
+        "left": 923,
+        "height": 44,
+        "width": 18
+    },
+    {
+        "text": "Thank",
+        "top": 1717,
+        "left": 618,
+        "height": 44,
+        "width": 104
+    },
+    {
+        "text": "you",
+        "top": 1717,
+        "left": 731,
+        "height": 44,
+        "width": 60
+    },
+    {
+        "text": "for",
+        "top": 1717,
+        "left": 800,
+        "height": 44,
+        "width": 45
+    },
+    {
+        "text": "your",
+        "top": 1717,
+        "left": 854,
+        "height": 44,
+        "width": 74
+    },
+    {
+        "text": "business!",
+        "top": 1717,
+        "left": 937,
+        "height": 44,
+        "width": 145
+    },
+    {
+        "text": "2.55",
+        "top": 776,
+        "left": 1287,
+        "height": 44,
+        "width": 63
+    },
+    {
+        "text": "8.50",
+        "top": 822,
+        "left": 1287,
+        "height": 44,
+        "width": 64
+    },
+    {
+        "text": "1.45",
+        "top": 868,
+        "left": 1292,
+        "height": 44,
+        "width": 59
+    },
+    {
+        "text": "TOTAL",
+        "top": 1554,
+        "left": 1259,
+        "height": 44,
+        "width": 111
+    },
+    {
+        "text": "12.75",
+        "top": 776,
+        "left": 1511,
+        "height": 44,
+        "width": 78
+    },
+    {
+        "text": "42.50",
+        "top": 822,
+        "left": 1506,
+        "height": 44,
+        "width": 83
+    },
+    {
+        "text": "10.15",
+        "top": 868,
+        "left": 1515,
+        "height": 44,
+        "width": 74
+    },
+    {
+        "text": "$",
+        "top": 1554,
+        "left": 1480,
+        "height": 44,
+        "width": 18
+    },
+    {
+        "text": "68.47",
+        "top": 1554,
+        "left": 1507,
+        "height": 44,
+        "width": 82
+    }
+]

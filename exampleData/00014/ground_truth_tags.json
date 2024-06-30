@@ -1,0 +1,210 @@
+[
+    {
+        "tag": "buyer.bill.address",
+        "value": "900 Joshua Street Suite 117\nWest Michelle, VT 97660",
+        "top": 547,
+        "left": 388,
+        "height": 66,
+        "width": 442
+    },
+    {
+        "tag": "buyer.bill.contact",
+        "value": "Brian Smith",
+        "top": 420,
+        "left": 388,
+        "height": 44,
+        "width": 442
+    },
+    {
+        "tag": "buyer.bill.customer_id",
+        "value": "9844169",
+        "top": 505,
+        "left": 388,
+        "height": 41,
+        "width": 442
+    },
+    {
+        "tag": "buyer.bill.phone_number",
+        "value": "+98 13 5455 4662",
+        "top": 614,
+        "left": 388,
+        "height": 40,
+        "width": 442
+    },
+    {
+        "tag": "buyer.company.name",
+        "value": "Roberts Ltd",
+        "top": 464,
+        "left": 388,
+        "height": 40,
+        "width": 442
+    },
+    {
+        "tag": "buyer.company.name",
+        "value": "Roberts Ltd",
+        "top": 464,
+        "left": 1143,
+        "height": 40,
+        "width": 441
+    },
+    {
+        "tag": "buyer.shipment.address",
+        "value": "4092 Johnson Brook\nNorth Yvonnetown, LA 24482",
+        "top": 505,
+        "left": 1143,
+        "height": 66,
+        "width": 441
+    },
+    {
+        "tag": "buyer.shipment.contact",
+        "value": "Joseph Morgan",
+        "top": 420,
+        "left": 1143,
+        "height": 44,
+        "width": 441
+    },
+    {
+        "tag": "buyer.shipment.phone_number",
+        "value": "+970 8 283 1394",
+        "top": 572,
+        "left": 1143,
+        "height": 41,
+        "width": 441
+    },
+    {
+        "tag": "invoice_date",
+        "value": "04/02/2020",
+        "top": 163,
+        "left": 124,
+        "height": 39,
+        "width": 1483
+    },
+    {
+        "tag": "invoice_due_date",
+        "value": "05/02/2020",
+        "top": 674,
+        "left": 388,
+        "height": 60,
+        "width": 442
+    },
+    {
+        "tag": "invoice_number",
+        "value": "#528910",
+        "top": 286,
+        "left": 201,
+        "height": 37,
+        "width": 1406
+    },
+    {
+        "tag": "payment_terms",
+        "value": "Payment terms: Cash account",
+        "top": 776,
+        "left": 1143,
+        "height": 41,
+        "width": 441
+    },
+    {
+        "tag": "payment_terms",
+        "value": "Payment terms: Cash account",
+        "top": 776,
+        "left": 388,
+        "height": 41,
+        "width": 442
+    },
+    {
+        "tag": "products.0.description",
+        "value": "S/4 Ivory Mini Rose Candle In Bowl",
+        "top": 945,
+        "left": 324,
+        "height": 60,
+        "width": 581
+    },
+    {
+        "tag": "products.0.id",
+        "value": "5825",
+        "top": 945,
+        "left": 199,
+        "height": 60,
+        "width": 124
+    },
+    {
+        "tag": "products.0.quantity",
+        "value": "7",
+        "top": 945,
+        "left": 95,
+        "height": 60,
+        "width": 103
+    },
+    {
+        "tag": "products.0.total",
+        "value": "11.55",
+        "top": 945,
+        "left": 1373,
+        "height": 60,
+        "width": 232
+    },
+    {
+        "tag": "products.0.unit_price",
+        "value": "1.65",
+        "top": 945,
+        "left": 906,
+        "height": 60,
+        "width": 232
+    },
+    {
+        "tag": "seller.company.name",
+        "value": "Riley-Richardson",
+        "top": 94,
+        "left": 124,
+        "height": 58,
+        "width": 1483
+    },
+    {
+        "tag": "seller.salesperson",
+        "value": "Robert Martinez",
+        "top": 735,
+        "left": 388,
+        "height": 40,
+        "width": 442
+    },
+    {
+        "tag": "summary.balance",
+        "value": "$ 4.40",
+        "top": 1550,
+        "left": 1373,
+        "height": 59,
+        "width": 232
+    },
+    {
+        "tag": "summary.discount",
+        "value": "7.31",
+        "top": 1369,
+        "left": 1373,
+        "height": 59,
+        "width": 232
+    },
+    {
+        "tag": "summary.shipping.method",
+        "value": "DHL",
+        "top": 735,
+        "left": 1143,
+        "height": 40,
+        "width": 441
+    },
+    {
+        "tag": "summary.subtotal",
+        "value": "11.55",
+        "top": 1429,
+        "left": 1373,
+        "height": 59,
+        "width": 232
+    },
+    {
+        "tag": "summary.tax_total",
+        "value": "0.16",
+        "top": 1489,
+        "left": 1373,
+        "height": 60,
+        "width": 232
+    }
+]
