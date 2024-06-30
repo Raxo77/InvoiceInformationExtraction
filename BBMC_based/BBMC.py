@@ -4,23 +4,22 @@ import torch
 # from TorchCRF import CRF
 from torchcrf import CRF
 import pandas as pd
-from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH, separate
+from utils.helperFunctions import loadJSON, getConfig, CONFIG_PATH, separate, createJSON
 from datetime import datetime
 from dataProcessing.customDataset import CustomDataset
-import warnings
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+torch.manual_seed(123)
 
 # Suppress the pandas append deprecation warning
-warnings.filterwarnings(
-    action='ignore',
-    message="The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead."
-)
+
 TOKENIZER = BertTokenizerFast.from_pretrained('bert-base-cased')
 MODEL = BertModel.from_pretrained('bert-base-cased')
 tokenizer = TOKENIZER
-model = MODEL
+modelCurrent = MODEL
 
 
-def countTokensPerWord(wordSeq: str, offsets: list) -> list:
+def countTokensPerWord2(wordSeq: str, offsets: list) -> list:
     wordIndex = 0
     tokenCount = [0 for i in range(len(wordSeq.split()))]
     for count in range(len(offsets) - 1):
@@ -32,23 +31,74 @@ def countTokensPerWord(wordSeq: str, offsets: list) -> list:
     return tokenCount
 
 
+def countTokensPerWord(text, offset_mapping):
+    # Split the text into words by whitespace
+    words = text.split()
+    word_boundaries = []
+    index = 0
+
+    # Calculate the start and end indices for each word
+    for word in words:
+        start_index = text.index(word, index)
+        end_index = start_index + len(word)
+        word_boundaries.append((start_index, end_index))
+        index = end_index
+
+    # Initialize the list for counting tokens per word
+    token_counts = [0] * len(words)
+
+    # Assign tokens to words based on offset mappings
+    for token_start, token_end in offset_mapping:
+        for i, (word_start, word_end) in enumerate(word_boundaries):
+            # Check if the token falls within the boundaries of the word
+            if word_start <= token_start < word_end:
+                token_counts[i] += 1
+                break
+
+    return token_counts
+
+
 class InvoiceBBMC(torch.nn.Module):
 
-    def __init__(self, tokenizer=tokenizer, model=model, hiddenDim=300, LSTMlayers=100, dropout_rate=.5,
-                 outputDim=19):
+    def __init__(self,
+                 tokenizer=tokenizer,
+                 model=modelCurrent,
+                 hiddenDim=300,
+                 LSTMlayers=100,
+                 dropoutRate=.5,
+                 numLabels=19,
+                 batchSize=8,
+                 device=torch.device("cuda" if torch.cuda.is_available() else "cpu")
+                 ):
         super(InvoiceBBMC, self).__init__()
 
+        self.device = device
+        self.batchSize = batchSize
+
         self.tokenizer = tokenizer
-        self.bert = model
+        self.bert = model.to(device)
 
         embeddingDim = self.bert.config.to_dict()['hidden_size']
-        self.bilstm = torch.nn.LSTM(embeddingDim, hiddenDim // 2, num_layers=LSTMlayers, bidirectional=True,
-                                    batch_first=True)
+        self.bilstm = torch.nn.LSTM(embeddingDim,
+                                    hiddenDim // 2,
+                                    num_layers=LSTMlayers,
+                                    bidirectional=True,
+                                    batch_first=True,
+                                    dropout=dropoutRate
+                                    ).to(device)
 
-        self.dropout = torch.nn.Dropout(dropout_rate)
-        self.multiheadAttention = torch.nn.MultiheadAttention(hiddenDim, num_heads=3, batch_first=True)
-        self.fc1 = torch.nn.Linear(hiddenDim, outputDim)
-        self.crf = CRF(outputDim, batch_first=True)
+        self.multiheadAttention = torch.nn.MultiheadAttention(hiddenDim,
+                                                              num_heads=3,
+                                                              batch_first=True,
+                                                              dropout=dropoutRate
+                                                              ).to(device)
+
+        self.fc1 = torch.nn.Linear(hiddenDim,
+                                   numLabels
+                                   ).to(device)
+        self.crf = CRF(numLabels,
+                        batch_first=True
+                       ).to(device)
 
     def getSequence(self, dataInstance):
         featuresDF = pd.read_csv(dataInstance["BERT-basedFeaturesPath"])
@@ -76,29 +126,24 @@ class InvoiceBBMC(torch.nn.Module):
 
         return tokenizedSeq
 
-    def forward(self, inputTensor, labels=None):
+    def forward(self, inputTensor, attentionMask, labels=None):
 
-        outputs = self.bert(inputTensor["input_ids"], attention_mask=inputTensor["attention_mask"])
+        outputs = self.bert(inputTensor, attention_mask=attentionMask)
         x = outputs[0]
 
         x, _ = self.bilstm(x)
 
+        x = self.dropout(x)
         x, _ = self.multiheadAttention(x, x, x)
 
         emissions = self.fc1(x)
 
-        # Get rid of CLS tokens for the CRF
-        emissions = emissions[:, 1:-1]
-
-        mask = [1 for i in range(emissions.size(1))]
-        mask = torch.tensor([mask]).bool()
-
         if labels is not None:
-            loss = -self.crf(emissions, labels, reduction='mean', mask=mask)
-            tags = self.crf.decode(emissions)
+            loss = -self.crf(emissions, labels, reduction='mean', mask=attentionMask.bool())
+            tags = self.crf.decode(emissions, mask=attentionMask.bool())
             return loss, tags
         else:
-            prediction = self.crf.decode(emissions, mask=mask)
+            prediction = self.crf.decode(emissions, mask=attentionMask.bool())
             return -1, prediction
 
     def getGoldLabels(self, dataInstance, tokenizedSequence):
@@ -107,7 +152,7 @@ class InvoiceBBMC(torch.nn.Module):
         dataSequence = "".join(dataSequenceAsList).lower()
         groundTruth = dataInstance["goldLabels"]
 
-        goldLabelsChar = ["O" for i in range(tokenizedSequence["input_ids"].size(1) - 2)]
+        goldLabelsChar = ["O" for _ in range(tokenizedSequence["input_ids"].size(1) - 2)]
         tokensAsText = self.tokenizer.convert_ids_to_tokens(tokenizedSequence["input_ids"].tolist()[0],
                                                             skip_special_tokens=True)
 
@@ -137,7 +182,7 @@ class InvoiceBBMC(torch.nn.Module):
                         temp += len(dataSequenceAsList[wordIndices[-1]])
 
                     tokensPerWord = countTokensPerWord(" ".join(dataSequenceAsList),
-                                                       tokenizedSequence.encodings[0].offsets)
+                                                       tokenizedSequence.encodings[0].offsets[1:-1])
                     startIndex2 = sum(tokensPerWord[:wordIndices[0]])
                     tokenRange = sum([tokensPerWord[i] for i in wordIndices])
                     goldLabelsChar[startIndex2] = f"B-{tag}"
@@ -196,49 +241,210 @@ class InvoiceBBMC(torch.nn.Module):
         goldLabels = [labelTranslation[i] for i in goldLabelsChar]
         return goldLabels, goldLabelsChar, labelTranslation
 
-    def trainModel(self, numEpochs, dataset, lr=1e-3):
+    def trainModel(self,
+                   numEpochs,
+                   dataset,
+                   trainHistoryPath="",
+                   lr=1e-3):
+
+        if trainHistoryPath:
+            trainHistory = pd.read_csv(trainHistoryPath)
+
+        try:
+            epochData = pd.read_csv("trainEpochData_06-06.csv")
+        except FileNotFoundError:
+            epochData = pd.DataFrame(columns=['epoch', 'avgLoss'])
+
+        try:
+            batchData = loadJSON(f"./batchData.json")
+        except FileNotFoundError:
+            batchData = {}
 
         self.train()
+
         optimizer = torch.optim.Adam(self.parameters(), lr=lr)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=.1)
 
-        epochData = pd.DataFrame(columns=['epoch', 'avgLoss'])
-        batchData = pd.DataFrame(columns=['epoch', 'batch', 'loss'])
-
+        # outermost loop - handles number of epochs
         for epoch in range(numEpochs):
             print(f"Epoch {epoch + 1} / {numEpochs}")
 
             overallEpochLoss = 0
             shuffledIndices = torch.randperm(len(dataset))
-            for i in range(len(dataset)):
-                instance = dataset[shuffledIndices[i]]
-                preparedInput = self.prepareInput(instance)
 
-                # self.getGoldLabels2(instance, preparedInput)
-                goldLabels, goldLabelsChar, labelTranslation = self.getGoldLabels(instance, preparedInput)
+            batchSize = self.batchSize
 
-                goldLabels = torch.tensor([goldLabels])
+            # intermediate loop - handles batches
+            for i in range(batchSize, len(dataset), batchSize):
+
+                batchDataIndex = f"{epoch}_{i}"
+                batchData[batchDataIndex] = {"batchLoss": 0,
+                                             "batchItems": [],
+                                             "goldLabels": [],
+                                             "predictions": []
+                                             }
+
+                allInstances = shuffledIndices[i - batchSize:i]
+                preparedInputList = []
+                attentionMaskList = []
+                labelsList = []
+
+                # innermost loop - respectively handles concrete instances in each batch
+                for batchNum, idx in enumerate(allInstances):
+
+                    instance = dataset[idx]
+
+                    pathToInstance = instance["instanceFolderPath"]
+                    itemNum = pathToInstance.split("\\")[-1]
+
+                    batchData[batchDataIndex]["batchItems"].append(itemNum)
+
+                    print(i, batchNum, pathToInstance)
+
+                    preparedInput = self.prepareInput(instance).to(self.device)
+
+                    if trainHistoryPath and f"{itemNum}_{epoch}" in trainHistory.values:
+                        continue
+
+                    if trainHistoryPath:
+                        trainHistory.loc[len(trainHistory)] = f"{itemNum}_{epoch}"
+
+                    goldLabels, goldLabelsChar, labelTranslation = self.getGoldLabels(instance, preparedInput)
+                    goldLabels = torch.tensor([goldLabels]).to(self.device)
+
+                    preparedInputList.append(preparedInput["input_ids"][0])
+                    labelsList.append(goldLabels[0])
+                    attentionMaskList.append(torch.ones((1, preparedInput["input_ids"].size(1))))
+
+                # end of innermost loop - i.e. pre-processing for all invoice instances of batch complete
+
+                if not preparedInputList:
+                    continue
+
+                batchData[batchDataIndex]["goldLabels"] = [i.tolist() for i in labelsList]
+
+                maxBatchLength = max(t.size(0) for t in preparedInputList)
+
+                preparedInputList = torch.stack([torch.nn.functional.pad(t,
+                                                                         (0,
+                                                                          maxBatchLength - t.size(0))
+                                                                         ) for t in preparedInputList],
+                                                dim=0)
+
+                labelsList = torch.stack([torch.nn.functional.pad(t,
+                                                                  (0,
+                                                                   maxBatchLength - t.size(0))
+                                                                  ) for t in labelsList],
+                                         dim=0)
+
+                attentionMask = torch.stack([torch.nn.functional.pad(t,
+                                                                     (0,
+                                                                      maxBatchLength - t.size(1))
+                                                                     ) for t in attentionMaskList],
+                                            dim=0)
+
+                attentionMask = attentionMask.view(attentionMask.size(0), attentionMask.size(2)).to(self.device)
 
                 self.zero_grad()
-                loss, predictions = self.forward(preparedInput, goldLabels)
-                batchData = batchData.append(
-                    {'epoch': epoch + 1, 'batch': i + 1, 'loss': loss.item()},
-                    ignore_index=True)
+                loss, predictions = self.forward(preparedInputList, attentionMask, labels=labelsList)
+
+                batchData[batchDataIndex]["predictions"] = predictions
+
+                overallEpochLoss += loss.item()
+                batchData[batchDataIndex]["batchLoss"] = loss.item()
 
                 loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=1.0)
                 optimizer.step()
-                overallEpochLoss += loss.item()
 
-            overallEpochLoss = overallEpochLoss / len(dataset)
-            epochData = epochData.append({'epoch': epoch + 1, 'avg_loss': overallEpochLoss}, ignore_index=True)
-            print(f"Avg. loss for epoch {epoch + 1}: {overallEpochLoss}")
+            # end of intermediate loop - respective epoch complete
 
-        time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
-        epochData.to_csv(f"./trainEpochData_{time}.csv")
-        batchData.to_csv(f"./trainBatchData_{time}.csv")
-        print("Training of BBMC model complete")
+            createJSON(r"F:\CodeCopy\InvoiceInformationExtraction\BBMC_based\batchData.json", batchData)
 
-    def testModel(self, dataset):
+            if trainHistoryPath:
+                trainHistory.to_csv(trainHistoryPath, index=False)
+
+            # after each epoch, save current state dict as checkpoint
+            time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+            checkpointPath = getConfig("BBMC_based", CONFIG_PATH)["pathToStateDict"][:-3] + f"{epoch}_"
+            checkpointPath += time
+            checkpointPath += ".pt"
+            torch.save(self.state_dict(), checkpointPath)
+
+            overallEpochLoss = overallEpochLoss / ((len(dataset) // self.batchSize) * self.batchSize)
+            epochData = epochData.append({'epoch': epoch + 1, 'avgLoss': overallEpochLoss}, ignore_index=True)
+            scheduler.step()
+
+            epochData.to_csv(r"F:\CodeCopy\InvoiceInformationExtraction\BBMC_based\trainEpochData.csv", index=False)
+
+        torch.save(self.state_dict(), getConfig("BBMC_based", CONFIG_PATH)["pathToStateDict"])
+        print("Training of BBMC-based model complete")
+
+    def testModel(self,
+                  dataset
+                  ):
+
+        testResults = {}
+        self.eval()
+
+        with torch.no_grad():
+            overallAcc = 0
+            overallLoss = 0
+
+            for c, idx in enumerate(range(len(dataset))):
+                instance = dataset[idx]
+                pathToInstance = instance["instanceFolderPath"]
+
+                print(c, pathToInstance)
+
+                itemNum = pathToInstance.split("\\")[-1]
+                testResults[itemNum] = {}
+
+                preparedInput = self.prepareInput(instance).to(self.device)
+                testResults[itemNum]["instanceTokens"] = self.tokenizer.convert_ids_to_tokens(
+                    preparedInput["input_ids"][0])
+
+                goldLabels, goldLabelsChar, labelTranslation = self.getGoldLabels(instance, preparedInput)
+
+                attentionMask = torch.ones((1, preparedInput["input_ids"].size(1))).to(self.device)
+
+                preparedInput = preparedInput["input_ids"][0][None, :]
+
+                # append labels for the special tokens
+                goldLabels.append(0)
+                goldLabels.insert(0, 0)
+                goldLabels = torch.tensor([goldLabels]).to(self.device)
+
+                loss, predictions = self.forward(preparedInput, attentionMask, labels=goldLabels)
+                overallLoss += loss.item()
+
+                testResults[itemNum]["goldLabels"] = goldLabels[0].tolist()
+                testResults[itemNum]["predictions"] = predictions[0]
+                testResults[itemNum]["loss"] = loss.item()
+                testResults[itemNum]["NumberOfNonZeroLabelsPredicted"] = sum(
+                    list(map(lambda x: 1 if x != 0 else 0, predictions[0])))
+                testResults[itemNum]["NumberOfNonZeroLabelsGold"] = sum(
+                    list(map(lambda x: 1 if x != 0 else 0, goldLabels[0].tolist())))
+
+                testResults[itemNum]["accuracy"] = accuracy_score(goldLabels[0].tolist(),
+                                                                  predictions[0])
+
+                overallAcc += testResults[itemNum]["accuracy"]
+
+                testResults[itemNum]["confusionMatrix"] = confusion_matrix(
+                    goldLabels[0].tolist(),
+                    predictions[0]).tolist()
+
+            time = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+            createJSON(f"F:\\CodeCopy\\InvoiceInformationExtraction\\BBMC_based\\testResults{time}.json", testResults)
+            print("Average Test Loss: {}".format(overallLoss / len(dataset)))
+            print("Average Test Accuracy: {}".format(overallAcc / len(dataset)))
+            print("-" * 100)
+            print("Testing of BBMC complete")
+            return testResults
+
+    def testModel2(self, dataset):
+
         testResults = pd.DataFrame(
             columns=['invoiceInstance', 'prediction', "goldLabels", "goldLabelsChar", "labelTranslation",
                      "instanceLoss"])
@@ -266,12 +472,10 @@ class InvoiceBBMC(torch.nn.Module):
 
         return testResults
 
-
-if __name__ == '__main__':
-    data = CustomDataset(getConfig("pathToDataFolder", CONFIG_PATH))
-    invoiceBBMC = InvoiceBBMC()
-
-    torch.save(invoiceBBMC.state_dict(), getConfig("BBMC_based", CONFIG_PATH)["pathToStateDict"])
-    invoiceBBMC.load_state_dict(torch.load(getConfig("BBMC_based", CONFIG_PATH)["pathToStateDict"]))
-    # invoiceBBMC.trainModel(2, data)
-    invoiceBBMC.testModel(data)
+    """
+    Model info:
+    
+    - number of parameters: 163_479_190
+    - time to train for 2,000 samples for one epoch:
+        ~ 250 minutes
+    """
