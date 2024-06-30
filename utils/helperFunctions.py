@@ -39,5 +39,7 @@ def flattenList(nestedList):
 
 # Path to the global config file for all extractionScripts, models and the ensemble
 # - will be imported by all subsequent modules
-# CONFIG_PATH = r"C:\Users\fabia\NER_for_IIE\utils\configGlobal.json"
-CONFIG_PATH = r"C:\Users\fabia\InvoiceInformationExtraction\utils\configGlobalDESKTOP.json"
+
+CONFIG_PATH = r"F:\CodeCopy\InvoiceInformationExtraction\utils\configGlobalDESKTOP.json"
+#CONFIG_PATH = r"C:\Users\fabia\InvoiceInformationExtraction\utils\configGlobalDESKTOP.json"
+#CONFIG_PATH = r"/mnt/c/Users/fabia/InvoiceInformationExtraction/utils/configGlobalDESKTOP.json"

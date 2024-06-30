@@ -1,13 +1,14 @@
 {
-  "pathToDataFolder": "F:\\TrainSplit2\\10.35097-1694\\10.35097-1694\\data\\dataset\\inv3d_train_part_2_of_4\\train_part_2_of_4",
-  "pathToTestDataFolder": "F:\\TestSplit\\data\\dataset\\inv3d_test\\inv3d_test\\test",
+  "pathToDataFolder": "F:\\trainDataSubset",
+  "pathToTestDataFolder": "F:\\testDataSubset",
+  "pathToTestDataFolderNewTemplatesOnly": "F:\\testDataSubsetNewTemplatesOnly",
   "pathToFastTextVectors": "F:\\fastText\\fastText_vectors.pth",
   "pathToFastTextStoi": "F:\\fastText\\fastText_stoi.pth",
   "pathToGloVeVectors": "F:\\GloVe\\glove_vectors.pth",
   "pathToGloVeStoi": "F:\\GloVe\\glove_stoi.pth",
-  "pathToCityGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\cities15000.csv",
-  "pathToCountryGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\countryNames.csv",
-  "pathToZIPGazetteer": "C:\\Users\\fabia\\NER_for_IIE\\gazetteers\\allCountriesZIPCodes.csv",
+  "pathToCityGazetteer": "F:\\gazetteers\\cities15000.csv",
+  "pathToCountryGazetteer": "F:\\gazetteers\\countryNames.csv",
+  "pathToZIPGazetteer": "F:\\gazetteers\\allCountriesZIPCodes.csv",
   "groundTruthFileName": "ground_truth_words.json",
   "numLabels": 10,
   "filesToDelete": [
@@ -38,23 +39,66 @@
     "tokenizer": "bert-base-cased",
     "model": "bert-base-cased",
     "inputFeatureSize": 2316,
-    "numEpochs": 1,
-    "learningRate": 1e-6,
+    "numEpochs": 10,
+    "learningRate": 1e-3,
+    "batchSize": 8,
     "numLabels": 10,
-    "pathToStateDict": "C:\\Users\\fabia\\InvoiceInformationExtraction\\BERT_based\\modelStateDict\\invoiceBERT-CRF.pth",
-    "pathToTrainingHistory": "C:\\Users\\fabia\\InvoiceInformationExtraction\\BERT_based\\trainHistory.csv"
+    "pathToStateDict": "F:\\CodeCopy\\InvoiceInformationExtraction\\BERT_based\\modelStateDict\\invoiceBERT-CRF_trained.pt",
+    "pathToTrainingHistory": "F:\\CodeCopy\\InvoiceInformationExtraction\\BERT_based\\trainHistory.csv"
   },
   "CloudScan_based": {
-    "numEpochs": 40,
-    "learningRate": 1e-5,
-    "pathToStateDict": "C:\\Users\\fabia\\NER_for_IIE\\CloudScan_based\\modelStateDict\\cloudScan.pth"
+    "hashSize": 262144,
+    "batchSize": 8,
+    "embeddingSize": 500,
+    "inputFeatureSize": 527,
+    "numLabels": 19,
+    "numEpochs": 12,
+    "learningRate": 1e-3,
+    "pathToStateDict": "F:\\CodeCopy\\InvoiceInformationExtraction\\CloudScan_based\\modelStateDict\\cloudScan_trained.pt",
+    "pathToTrainingHistory": "F:\\CodeCopy\\InvoiceInformationExtraction\\CloudScan_based\\trainHistory.csv"
   },
   "BBMC_based": {
-    "pathToStateDict": "C:\\Users\\fabia\\NER_for_IIE\\BBMC_based\\modelStateDict\\invoiceBBMC.pth"
+    "tokenizer": "bert-base-cased",
+    "model": "bert-base-cased",
+    "hiddenDim": 300,
+    "LSTMlayers": 100,
+    "dropoutRate": 0.5,
+    "numLabels": 19,
+    "batchSize": 8,
+    "numEpochs": 10,
+    "learningRate": 1e-4,
+    "pathToStateDict": "F:\\CodeCopy\\InvoiceInformationExtraction\\BBMC_based\\modelStateDict\\invoiceBBMC_trained.pt",
+    "pathToTrainingHistory": "F:\\CodeCopy\\InvoiceInformationExtraction\\BBMC_based\\trainHistory.csv"
   },
   "GCN_based": {
-    "pathToStateDict": "",
-    "numLabels": 19
+    "learningRate": 1e-3,
+    "tokenizer": "bert-base-cased",
+    "model": "bert-base-cased",
+    "numLabels": 19,
+    "initialNumFilters": 16,
+    "filterSize": 3,
+    "featureSize": 782,
+    "batchSize": 64,
+    "saveGraph": false,
+    "numEpochs": 30,
+    "initFilterNumber": 16,
+    "pathToStateDict": "F:\\CodeCopy\\InvoiceInformationExtraction\\GCN_based\\modelStateDict\\invoiceGCN_trained.pt",
+    "pathToTrainingHistory": "F:\\CodeCopy\\InvoiceInformationExtraction\\GCN_based\\trainHistory.csv"
+  },
+  "BiLSTM_CNN_CRF_based": {
+    "kernelSize": 3,
+    "charEmbeddingSize": 30,
+    "maxWordsPerInvoice": 512,
+    "batchSize": 32,
+    "trainableEmbeddings": false,
+    "numEpochs": 12,
+    "learningRate": 1e-3,
+    "pathToStateDict": "F:\\CodeCopy\\InvoiceInformationExtraction\\BiLSTM_CNN_CRF_based\\modelStateDict\\invoiceBiLSTM_CNN_CRF_trained.pt",
+    "pathToTrainingHistory": "F:\\CodeCopy\\InvoiceInformationExtraction\\BiLSTM_CNN_CRF_based\\trainHistory.csv"
+  },
+  "Intellix_based": {
+    "pathToPeers": "F:\\CodeCopy\\InvoiceInformationExtraction\\Intellix_based\\templatesDB\\peerGroups.csv",
+    "pathToScripts": "F:\\CodeCopy\\InvoiceInformationExtraction\\Intellix_based\\templatesDB\\extractionScripts.json"
   },
   "targetLabels": {
     "invoiceDate": [
@@ -89,8 +133,6 @@
     "useSubmodel3": true,
     "useSubmodel4": true,
     "useSubmodel5": true,
-    "useSubmodel6": true,
-    "useSubmodel7": true,
-    "useSubmodel8": true
+    "useSubmodel6": true
   }
 }
