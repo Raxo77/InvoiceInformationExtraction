@@ -1,0 +1,142 @@
+{
+  "Invoice_16": {
+    "invoiceDate": {
+      "top": 293,
+      "left": 1405,
+      "height": 36,
+      "width": 202
+    },
+    "invoiceNumber": {
+      "top": 255,
+      "left": 1467,
+      "height": 37,
+      "width": 140
+    },
+    "invoiceGrossAmount": {
+      "top": 1558,
+      "left": 1385,
+      "height": 39,
+      "width": 220
+    },
+    "issuerName": {
+      "top": 94,
+      "left": 95,
+      "height": 40,
+      "width": 755
+    },
+    "issuerAddress": {
+      "top": 236,
+      "left": 95,
+      "height": 38,
+      "width": 755
+    }
+  },
+  "Invoice_24": {
+    "invoiceDate": {
+      "top": 372,
+      "left": 571,
+      "height": 53,
+      "width": 270
+    },
+    "invoiceNumber": {
+      "top": 379,
+      "left": 266,
+      "height": 46,
+      "width": 304
+    },
+    "invoiceGrossAmount": {
+      "top": 1625,
+      "left": 1191,
+      "height": 91,
+      "width": 220
+    },
+    "invoiceTaxAmount": {
+      "top": 1492,
+      "left": 1191,
+      "height": 54,
+      "width": 176
+    },
+    "issuerName": {
+      "top": 465,
+      "left": 571,
+      "height": 28,
+      "width": 619
+    }
+  },
+  "Invoice_32": {
+    "invoiceDate": {
+      "top": 436,
+      "left": 1368,
+      "height": 44,
+      "width": 247
+    },
+    "invoiceNumber": {
+      "top": 525,
+      "left": 1368,
+      "height": 44,
+      "width": 247
+    },
+    "invoiceGrossAmount": {
+      "top": 1935,
+      "left": 1368,
+      "height": 55,
+      "width": 247
+    },
+    "invoiceTaxAmount": {
+      "top": 1771,
+      "left": 1368,
+      "height": 53,
+      "width": 247
+    },
+    "issuerName": {
+      "top": 436,
+      "left": 86,
+      "height": 44,
+      "width": 862
+    },
+    "issuerAddress": {
+      "top": 481,
+      "left": 86,
+      "height": 43,
+      "width": 862
+    },
+    "issuerCity": {
+      "top": 525,
+      "left": 86,
+      "height": 44,
+      "width": 862
+    }
+  },
+  "Invoice_50": {
+    "invoiceDate": {
+      "top": 671,
+      "left": 1271,
+      "height": 40,
+      "width": 294
+    },
+    "invoiceNumber": {
+      "top": 133,
+      "left": 433,
+      "height": 41,
+      "width": 1132
+    },
+    "invoiceGrossAmount": {
+      "top": 1962,
+      "left": 1302,
+      "height": 99,
+      "width": 263
+    },
+    "invoiceTaxAmount": {
+      "top": 1862,
+      "left": 1302,
+      "height": 99,
+      "width": 263
+    },
+    "issuerName": {
+      "top": 217,
+      "left": 134,
+      "height": 119,
+      "width": 1431
+    }
+  }
+}
