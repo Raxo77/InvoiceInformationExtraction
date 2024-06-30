@@ -40,6 +40,7 @@ To arrive at final predictions, the ensemble voting scheme adhered to the follow
 ---
 
 ## Results
+
 When employed in isolation, performance of the deep learning-based submodels was assessed based on accuracy and a
 custom metric comparing the indices of non-"undefined" labels in the predictions and the gold labels.  
 To assess the quality of the
