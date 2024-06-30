@@ -50,9 +50,11 @@ returned. In a second step it was then analysed for how many of these
 samples the classified template actually matched the invoice template as
 per ground truth. To allow for effective comparison of model versus ensemble
 performance, the ensemble was also assessed on the same metrics as the template-based approach
+
 ![Performance of Deep Learning-based Models](utils/figures/Table_Performance_DL.png "Performance of Deep Learning-based Models")
 ![Performance of Template-based Model](utils/figures/Table_Performance_Template.png "Performance of Template-based Model")
 ![Ensemble Performance](utils/figures/Table_Performance_Ensemble.png "Ensemble Performance")
+
 Performance evaluation highlights that the ensemble approach does not
 conclusively increase or decrease effectivity, but its overall performance is
 highly dependent on the underlying document template. It can further be
