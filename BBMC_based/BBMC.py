@@ -345,7 +345,7 @@ class InvoiceBBMC(torch.nn.Module):
 
                 attentionMask = attentionMask.view(attentionMask.size(0), attentionMask.size(2)).to(self.device)
 
-                self.zero_grad()
+                optimizer.zero_grad()
                 loss, predictions = self.forward(preparedInputList, attentionMask, labels=labelsList)
 
                 batchData[batchDataIndex]["predictions"] = predictions
