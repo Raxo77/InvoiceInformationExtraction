@@ -307,7 +307,7 @@ class CloudScanLSTM(torch.nn.Module):
                                                                          ) for t in preparedInputList],
                                                 dim=0)
 
-                self.zero_grad()
+                optimizer.zero_grad()
                 logits = self.forward(preparedInputList)
 
                 predictedLabels = torch.argmax(torch.nn.functional.softmax(logits, dim=2), dim=2)
