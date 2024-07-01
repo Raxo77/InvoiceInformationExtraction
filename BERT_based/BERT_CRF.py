@@ -494,7 +494,7 @@ class InvoiceBERT(torch.nn.Module):
 
                 attentionMask = attentionMask.unsqueeze(-1).repeat(1, 1, 1, attentionMask.size(-1)).to(self.device)
 
-                self.zero_grad()
+                optimizer.zero_grad()
                 loss, tags = self.forward(preparedInputList, labelsList, attentionMask=attentionMask)
 
                 for c, j in enumerate(batchData[batchDataIndex]["goldLabels"]):
