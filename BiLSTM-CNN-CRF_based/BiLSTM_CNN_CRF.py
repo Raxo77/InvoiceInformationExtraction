@@ -376,7 +376,7 @@ class Invoice_BiLSTM_CNN_CRF(torch.nn.Module):
 
                 attentionMask = torch.stack(attentionMaskList, dim=0).to(self.device)
 
-                self.zero_grad()
+                optimizer.zero_grad()
                 loss, predictions = self.forward(preparedInputList, labelsList, attentionMask)
 
                 batchData[batchDataIndex]["predictions"] = predictions
