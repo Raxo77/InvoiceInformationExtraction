@@ -335,7 +335,7 @@ class InvoiceGCN(torch.nn.Module):
 
                 batchData[batchDataIndex]["goldLabels"].append(goldLabels.tolist())
 
-                self.zero_grad()
+                optimizer.zero_grad()
 
                 dataLoader = DataLoader(graphDataList, batchSize, shuffle=False)
                 graphData = next(iter(dataLoader)).to(self.device)
